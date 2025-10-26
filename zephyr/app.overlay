@@ -1,0 +1,3 @@
+&flexcan3 {
+	status = "okay";
+};

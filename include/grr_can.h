@@ -1,10 +1,12 @@
 #ifndef GRR_CAN_H
 #define GRR_CAN_H
 
-#include <zephyr.h>
+// #include <zephyr.h>
 #include <sys/types.h>
-#include <string.h>
-#include <device.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/hwinfo.h>
+#include <zephyr/sys/printk.h>
+#include <zephyr/drivers/can.h>
 
 /* CAN message IDs (keep consistent with your original enums) */
 enum CAN_IDs {
@@ -34,7 +36,7 @@ enum CAN_IDs {
  */
 
 void init_can(void);
+const char *getDeviceInfo(void);
 void send_heartbeat(void);
 bool handle_incoming_frame(void *frame);
-
 #endif // GRR_CAN_H

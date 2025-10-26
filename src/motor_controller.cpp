@@ -1,51 +1,47 @@
 #include "../include/motor_controller.h"
-#include <drivers/gpio.h>
-#include <drivers/pwm.h>
-#include <logging/log.h>
 
 LOG_MODULE_REGISTER(motor_controller, LOG_LEVEL_DBG);
 
-GRRMotor::GRRMotor(int DIR, int PWM, int SLP, int FLT, int EN_OUTA, int EN_OUTB, int CS, const std::string &joint_name, const std::string &control_type)
-  : DIR(DIR), PWM(PWM), SLP(SLP), FLT(FLT), CS(CS), joint_name(joint_name), control_type(control_type)
+MotorController::MotorController(int DIR, int PWM, int SLP, int FLT, int EN_OUTA, int EN_OUTB, int CS, const char *joint_name, const char *control_type)
+  : DIR(DIR), PWM(PWM), SLP(SLP), FLT(FLT), CS(CS), EN_OUTA(EN_OUTA), EN_OUTB(EN_OUTB), joint_name(joint_name), control_type(control_type)
 {
-  LOG_DBG("Constructed motor %s (DIR=%d PWM=%d)", this->joint_name.c_str(), DIR, PWM);
+  LOG_DBG("Constructed motor %s (DIR=%d PWM=%d)", this->joint_name, DIR, PWM);
 }
 
-GRRMotor::GRRMotor()
-  : DIR(0), PWM(0), SLP(0), FLT(0), CS(0), joint_name("NULL"), control_type("NULL")
+MotorController::MotorController()
+  : DIR(0), PWM(0), SLP(0), FLT(0), CS(0), EN_OUTA(0), EN_OUTB(0), joint_name("NULL"), control_type("NULL")
 {
 }
 
-void GRRMotor::setMotorVelocity(float velocity)
+void MotorController::setMotorVelocity(float velocity)
 {
-  // In Zephyr you'd use pwm_pin_set_usec or a pwm device; here we log the requested velocity
-  LOG_INF("Set motor %s velocity: %f", joint_name.c_str(), velocity);
+  LOG_INF("Set motor %s velocity: %f", joint_name, velocity);
 }
 
-void GRRMotor::setMotorEffort(int effort)
+void MotorController::setMotorEffort(int effort)
 {
-  LOG_INF("Set motor %s effort: %d", joint_name.c_str(), effort);
+  LOG_INF("Set motor %s effort: %d", joint_name, effort);
 }
 
-float GRRMotor::getMotorVelocity()
+float MotorController::getMotorVelocity()
 {
   // Placeholder: real implementation requires encoder/counter device
-  LOG_DBG("getMotorVelocity called for %s", joint_name.c_str());
+  LOG_DBG("getMotorVelocity called for %s", joint_name);
   return 0.0f;
 }
 
-int GRRMotor::getMotorEffort()
+int MotorController::getMotorEffort()
 {
-  LOG_DBG("getMotorEffort called for %s", joint_name.c_str());
+  LOG_DBG("getMotorEffort called for %s", joint_name);
   return 0;
 }
 
-std::string GRRMotor::getJointName()
+const char *MotorController::getJointName()
 {
   return joint_name;
 }
 
-std::string GRRMotor::getControlType()
+const char *MotorController::getControlType()
 {
   return control_type;
 }
