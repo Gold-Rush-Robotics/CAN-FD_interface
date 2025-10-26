@@ -1,0 +1,128 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
+{
+    "configurations": [
+        {
+            "name": "PlatformIO",
+            "includePath": [
+                "/home/nitin/Documents/CAN-FD_interface/include",
+                "/home/nitin/Documents/CAN-FD_interface/src",
+                "/home/nitin/Documents/CAN-FD_interface/.pio/build/teensy41/zephyr/include/generated/zephyr",
+                "/home/nitin/.platformio/packages/framework-zephyr/include",
+                "/home/nitin/Documents/CAN-FD_interface/.pio/build/teensy41/zephyr/include/generated",
+                "/home/nitin/.platformio/packages/framework-zephyr/soc/nxp/imxrt",
+                "/home/nitin/.platformio/packages/framework-zephyr/lib/libc/newlib/include",
+                "/home/nitin/.platformio/packages/framework-zephyr/include/zephyr/posix",
+                "/home/nitin/.platformio/packages/framework-zephyr/lib/posix/options/getopt",
+                "/home/nitin/.platformio/packages/framework-zephyr/soc/nxp/imxrt/imxrt10xx",
+                "/home/nitin/.platformio/packages/framework-zephyr/subsys/usb/device",
+                "/home/nitin/.platformio/packages/framework-zephyr/subsys/shell/modules/kernel_service",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/cmsis/CMSIS/Core/Include",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/cmsis_6/CMSIS/Core/Include",
+                "/home/nitin/.platformio/packages/framework-zephyr/modules/cmsis_6",
+                "/home/nitin/.platformio/packages/framework-zephyr/modules/hal_nxp/mcux/mcux-sdk-ng/middleware",
+                "/home/nitin/.platformio/packages/framework-zephyr/modules/hal_nxp/mcux/mcux-sdk-ng",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/middleware/usb/device",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/middleware/usb/phy",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/middleware/usb/include",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/common",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/components/osa/config",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/components/osa",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/flexcan",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/igpio",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/lpuart",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/ocotp",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/src",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/cache/armv7-m7",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/devices/RT/RT1060/MIMXRT1062",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/devices/RT/RT1060/periph",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/devices/RT/RT1050/MIMXRT1052/xip",
+                "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/devices/RT/RT1060/MIMXRT1062/drivers",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/home/nitin/Documents/CAN-FD_interface/include",
+                    "/home/nitin/Documents/CAN-FD_interface/src",
+                    "/home/nitin/Documents/CAN-FD_interface/.pio/build/teensy41/zephyr/include/generated/zephyr",
+                    "/home/nitin/.platformio/packages/framework-zephyr/include",
+                    "/home/nitin/Documents/CAN-FD_interface/.pio/build/teensy41/zephyr/include/generated",
+                    "/home/nitin/.platformio/packages/framework-zephyr/soc/nxp/imxrt",
+                    "/home/nitin/.platformio/packages/framework-zephyr/lib/libc/newlib/include",
+                    "/home/nitin/.platformio/packages/framework-zephyr/include/zephyr/posix",
+                    "/home/nitin/.platformio/packages/framework-zephyr/lib/posix/options/getopt",
+                    "/home/nitin/.platformio/packages/framework-zephyr/soc/nxp/imxrt/imxrt10xx",
+                    "/home/nitin/.platformio/packages/framework-zephyr/subsys/usb/device",
+                    "/home/nitin/.platformio/packages/framework-zephyr/subsys/shell/modules/kernel_service",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/cmsis/CMSIS/Core/Include",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/cmsis_6/CMSIS/Core/Include",
+                    "/home/nitin/.platformio/packages/framework-zephyr/modules/cmsis_6",
+                    "/home/nitin/.platformio/packages/framework-zephyr/modules/hal_nxp/mcux/mcux-sdk-ng/middleware",
+                    "/home/nitin/.platformio/packages/framework-zephyr/modules/hal_nxp/mcux/mcux-sdk-ng",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/middleware/usb/device",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/middleware/usb/phy",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/middleware/usb/include",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/common",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/components/osa/config",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/components/osa",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/flexcan",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/igpio",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/lpuart",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/ocotp",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/src",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/drivers/cache/armv7-m7",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/devices/RT/RT1060/MIMXRT1062",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/devices/RT/RT1060/periph",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/devices/RT/RT1050/MIMXRT1052/xip",
+                    "/home/nitin/.platformio/packages/framework-zephyr/_pio/modules/hal/nxp/mcux/mcux-sdk-ng/devices/RT/RT1060/MIMXRT1062/drivers",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=60118",
+                "__IMXRT1062__",
+                "ARDUINO_TEENSY41",
+                "BOARD_FLASH_SIZE=CONFIG_FLASH_SIZE*1024",
+                "CPU_MIMXRT1062DVL6A",
+                "DATA_SECTION_IS_CACHEABLE=1",
+                "FLEXCAN_WAIT_TIMEOUT=10000",
+                "KERNEL",
+                "K_HEAP_MEM_POOL_SIZE=512",
+                "NDEBUG",
+                "XIP_BOOT_HEADER_DCD_ENABLE=1",
+                "XIP_BOOT_HEADER_ENABLE=1",
+                "XIP_EXTERNAL_FLASH",
+                "_ANSI_SOURCE",
+                "__LINUX_ERRNO_EXTENSIONS__",
+                "__PROGRAM_START",
+                "__ZEPHYR__=1",
+                "USE_RTOS=1",
+                "_POSIX_THREADS",
+                ""
+            ],
+            "cStandard": "c99",
+            "forcedInclude": [
+                "/home/nitin/Documents/CAN-FD_interface/.pio/build/teensy41/zephyr/include/generated/zephyr/autoconf.h",
+                "/home/nitin/.platformio/packages/framework-zephyr/include/zephyr/toolchain/zephyr_stdint.h",
+                ""
+            ],
+            "compilerPath": "/home/nitin/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gcc",
+            "compilerArgs": [
+                "-mcpu=cortex-m7",
+                "-mthumb",
+                "-mabi=aapcs",
+                "-mfpu=fpv5-d16",
+                "-mfloat-abi=hard",
+                "-mfp16-format=ieee",
+                "-isystem",
+                "/home/nitin/.platformio/packages/framework-zephyr/lib/libc/common/include",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}
