@@ -1,12 +1,9 @@
 &flexcan3 {
 	status = "okay";
-	max-bitrate = <1000000>;
-	max-bitrate-data = <2000000>;
-	
+	bus-speed = <1000000>;
+	bus-speed-data = <2000000>;
 };
-&zephyr_udc0 {
-	cdc_acm_uart0: cdc_acm_uart0 {
-		compatible = "zephyr,cdc-acm-uart";   
-                label = "CDC_ACM_0";
-        };
+zephyr_udc0: &usb0s {
+     compatible = "vnd,usb-device";
+     /* ... */
 };
