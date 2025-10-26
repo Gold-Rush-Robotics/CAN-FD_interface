@@ -35,8 +35,8 @@ enum CAN_IDs {
  * light we use void* in public prototypes and cast in the implementation.
  */
 
-void init_can(void);
+bool init_can(void);
 const char *getDeviceInfo(void);
-void send_heartbeat(void);
+bool send_heartbeat(void);
 bool handle_incoming_frame(void *frame);
 #endif // GRR_CAN_H
