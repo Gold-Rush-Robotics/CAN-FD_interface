@@ -13,6 +13,11 @@ static struct k_timer led_timer;
 #define LED0_NODE DT_ALIAS(led0)
 static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 
+/* CAN message queue used across the app - must be file-scope so the
+ * iterable-section macro can place it in the proper linker section.
+ */
+CAN_MSGQ_DEFINE(my_can_msgq, 2);
+
 void led_timeout(struct k_timer *timer_id)
 {
     ARG_UNUSED(timer_id);
@@ -27,14 +32,17 @@ void hb_timeout(struct k_timer *timer_id)
     LOG_DBG("hb_timeout fired");
     bool sent = send_heartbeat();
 	if (!sent) {
-		gpio_pin_set_dt(&led, 1);
-		k_sleep(K_SECONDS(10));
-		gpio_pin_set_dt(&led, 0);
 		LOG_ERR("Failed to send heartbeat");
 
 	} else {
 		LOG_DBG("Heartbeat sent successfully");
 	}
+}
+void rx_timeout(struct k_timer *timer_id)
+{
+    ARG_UNUSED(timer_id);
+    LOG_DBG("rx_timeout fired");
+    // Placeholder for receiving CAN messages
 }
 
 int main()
@@ -61,29 +69,31 @@ int main()
     bool configured = init_can();
 	if (!configured) {
 		LOG_ERR("CAN initialization failed");
-		gpio_pin_set_dt(&led, 1);
-		k_sleep(K_SECONDS(10));
-		gpio_pin_set_dt(&led, 0);
+
 		return 1;
 	}
 	else {
 		LOG_INF("CAN initialized successfully");
-		gpio_pin_set_dt(&led, 1);
-		k_sleep(K_SECONDS(1));
-		gpio_pin_set_dt(&led, 0);
 
 	}
+
+    struct can_frame rx_frame;
 
 
     k_timer_init(&hb_timer, hb_timeout, NULL);
     k_timer_start(&hb_timer, K_SECONDS(1), K_SECONDS(1));
 
-    // Initialize and start LED timer
-    k_timer_init(&led_timer, led_timeout, NULL);
-    k_timer_start(&led_timer, K_MSEC(500), K_MSEC(500));  // Blink every 500ms
+    // // Initialize and start LED timer
+    // k_timer_init(&led_timer, led_timeout, NULL);
+    // k_timer_start(&led_timer, K_MSEC(500), K_MSEC(500));  // Blink every 500ms
 
     while (1) {
         k_sleep(K_SECONDS(10));
+        k_msgq_get(&my_can_msgq, &rx_frame, K_FOREVER);
+        ret = handle_incoming_frame(&rx_frame);
+        if (!ret) {
+            LOG_ERR("Failed to handle incoming CAN frame");
+        }
 		printk("Main loop is running...\n");
     }
 }

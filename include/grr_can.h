@@ -38,5 +38,5 @@ enum CAN_IDs {
 bool init_can(void);
 const char *getDeviceInfo(void);
 bool send_heartbeat(void);
-bool handle_incoming_frame(void *frame);
+bool handle_incoming_frame(can_frame *frame);
 #endif // GRR_CAN_H

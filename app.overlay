@@ -3,7 +3,3 @@
 	bus-speed = <1000000>;
 	bus-speed-data = <2000000>;
 };
-zephyr_udc0: &usb0s {
-     compatible = "vnd,usb-device";
-     /* ... */
-};

@@ -134,24 +134,14 @@ bool send_heartbeat(void)
 }
 
 
-bool handle_incoming_frame(void *frame)
+bool handle_incoming_frame(can_frame *frame)
 {
     if (!frame)
         return false;
 
-    struct can_frame *f = (struct can_frame *)frame;
-    LOG_DBG("Received frame id=0x%X dlc=%d", f->id, f->dlc);
+
+    LOG_DBG("Received frame id=0x%d dlc=%d", frame->id, frame->dlc);
     return true;
 }
 
-void can_rx_callback(const struct device *dev, struct can_frame *frame, void *user_data)
-{
-    ARG_UNUSED(dev);
-    ARG_UNUSED(user_data);
 
-    if (!frame)
-        return;
-
-    LOG_DBG("Received frame id=0x%X dlc=%d", frame->id, frame->dlc);
-    // Process the received frame as needed
-}
