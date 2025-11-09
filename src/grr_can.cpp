@@ -65,7 +65,7 @@ bool init_can(void){
         }
         LOG_INF("CAN set to NORMAL mode");
     }
-    err = can_set_bitrate_data(can_dev, 4000000);
+    err = can_set_bitrate_data(can_dev, 2000000);
     if( err != 0) {
         LOG_ERR("Error setting CAN data bitrate (err %d)", err);
         if (err == -EIO) {
@@ -137,6 +137,103 @@ bool send_heartbeat(void)
 bool handle_incoming_frame(can_frame *frame)
 {
     if (!frame)
+        return false;
+    if (frame->id == CAN_IDs::E_STOP)
+        {
+            LOG_WRN("E_STOP command received!");
+            // Implement E_STOP handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::HALT)
+        {
+            LOG_WRN("HALT command received!");
+            // Implement HALT handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::RESTART)
+        {
+            LOG_WRN("RESTART command received!");
+            // Implement RESTART handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::QUERY)
+        {
+            LOG_INF("QUERY command received!");
+            // Implement QUERY handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::ASSIGN_ID)
+        {
+            LOG_INF("ASSIGN_ID command received!");
+            // Implement ASSIGN_ID handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::FIRMWARE)
+        {
+            LOG_INF("FIRMWARE command received!");
+            // Implement FIRMWARE handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::MOTOR_COMMAND)
+        {
+            LOG_INF("MOTOR_COMMAND command received!");
+            // Implement MOTOR_COMMAND handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::SERVO_CONTROL)
+        {
+            LOG_INF("SERVO_CONTROL command received!");
+            // Implement SERVO_CONTROL handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::DIO)
+        {
+            LOG_INF("DIO command received!");
+            // Implement DIO handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::SENSORS)
+        {
+            LOG_INF("SENSORS command received!");
+            // Implement SENSORS handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::FATAL)
+        {
+            LOG_ERR("FATAL error received!");
+            // Implement FATAL error handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::ERROR)
+        {
+            LOG_ERR("ERROR message received!");
+            // Implement ERROR message handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::WARNINGS)
+        {
+            LOG_WRN("WARNINGS message received!");
+            // Implement WARNINGS message handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::LOGS)
+        {
+            LOG_INF("LOGS message received!");
+            // Implement LOGS message handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::MOANING)
+        {
+            LOG_INF("MOANING message received!");
+            // Implement MOANING message handling logic here
+            return true;
+        }
+    else if (frame->id == CAN_IDs::SGA_WARRANTY)
+        {
+            LOG_INF("SGA_WARRANTY message received!");
+            // Implement SGA_WARRANTY message handling logic here
+            return true;
+        }       
         return false;
 
 

@@ -3,3 +3,6 @@
 	bus-speed = <1000000>;
 	bus-speed-data = <2000000>;
 };
+chosen {
+	zephyr,canbus = &flexcan3
+}

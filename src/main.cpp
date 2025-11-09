@@ -3,6 +3,9 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/drivers/gpio.h>
 #include "../include/grr_can.h"
+#include "../include/motor_controller.h"
+
+
 
 LOG_MODULE_REGISTER(grr_main);
 
