@@ -41,12 +41,6 @@ void hb_timeout(struct k_timer *timer_id)
 		LOG_DBG("Heartbeat sent successfully");
 	}
 }
-void rx_timeout(struct k_timer *timer_id)
-{
-    ARG_UNUSED(timer_id);
-    LOG_DBG("rx_timeout fired");
-    // Placeholder for receiving CAN messages
-}
 
 int main()
 {
