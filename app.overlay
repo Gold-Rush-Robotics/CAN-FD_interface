@@ -1,8 +1,47 @@
-&flexcan3 {
-	status = "okay";
-	bus-speed = <1000000>;
-	bus-speed-data = <2000000>;
+/* CAN-FD Interface Device Tree Overlay */
+
+/ {
+    chosen {
+        zephyr,canbus = &flexcan3;
+    };
+    
+    aliases {
+        can0 = &flexcan3;
+    };
 };
-chosen {
-	zephyr,canbus = &flexcan3
-}
+
+&flexcan3 {
+    status = "okay";
+    bus-speed = <1000000>;      /* 1 Mbps nominal bitrate */
+    bus-speed-data = <2000000>; /* 2 Mbps data bitrate for FD */
+};
+
+/* 
+ * PWM configuration for motor and servo control
+ * Uncomment and adjust based on your specific board/MCU
+ */
+
+/*
+&pwm1 {
+    status = "okay";
+    pinctrl-0 = <&pwm1_default>;
+    pinctrl-names = "default";
+};
+
+&pwm2 {
+    status = "okay";
+    pinctrl-0 = <&pwm2_default>;
+    pinctrl-names = "default";
+};
+*/
+
+/*
+ * GPIO configuration for motor control signals
+ * Uncomment and adjust based on your specific board/MCU
+ */
+
+/*
+&gpio1 {
+    status = "okay";
+};
+*/
