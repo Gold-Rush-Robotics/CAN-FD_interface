@@ -5,6 +5,7 @@
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/can.h>
+#include <zephyr/drivers/hwinfo.h>
 #include <string.h>
 #include <errno.h>
 
@@ -17,6 +18,7 @@ LOG_MODULE_REGISTER(grr_can, LOG_LEVEL_DBG);
 
 static const struct device *can_dev = NULL;
 uint8_t g_node_id = 0x01;  /* Default node ID, can be changed via ASSIGN_ID */
+uint8_t g_hw_uid[HW_UID_LEN] = {0};  /* Hardware-unique ID (populated at boot) */
 
 /* Callback function pointers for motor and servo handlers */
 static motor_command_handler_t motor_handler = NULL;
@@ -386,11 +388,43 @@ bool handle_incoming_frame(struct can_frame *frame)
         return true;
     }
     
-    /* Handle ASSIGN_ID */
+    /* Handle ASSIGN_ID – multi-Teensy unique-ID protocol */
     if (frame->id == ASSIGN_ID) {
-        if (frame->dlc >= 1) {
-            g_node_id = frame->data[0];
-            LOG_INF("Node ID assigned: %d", g_node_id);
+        if (frame->dlc < 1) {
+            return true;
+        }
+        uint8_t sub_cmd = frame->data[0];
+
+        switch (sub_cmd) {
+            case ASSIGN_SUBCMD_QUERY_UID:
+                /* Master asked all nodes to announce – respond with our UID */
+                LOG_INF("ASSIGN_ID: QUERY_UID received, announcing");
+                can_announce_uid();
+                break;
+
+            case ASSIGN_SUBCMD_SET: {
+                /* data[1..4] = target UID, data[5] = new node ID */
+                if (frame->dlc < 6) {
+                    LOG_WRN("ASSIGN_ID SET: frame too short (dlc=%d)", frame->dlc);
+                    break;
+                }
+                bool uid_match = (memcmp(&frame->data[1], g_hw_uid, HW_UID_LEN) == 0);
+                if (uid_match) {
+                    uint8_t new_id = frame->data[5];
+                    LOG_INF("ASSIGN_ID SET: UID match – node ID %d → %d",
+                            g_node_id, new_id);
+                    g_node_id = new_id;
+                    /* ACK by announcing with the new ID */
+                    can_announce_uid();
+                } else {
+                    LOG_DBG("ASSIGN_ID SET: UID mismatch, ignoring");
+                }
+                break;
+            }
+
+            default:
+                LOG_WRN("ASSIGN_ID: unknown sub-cmd 0x%02X", sub_cmd);
+                break;
         }
         return true;
     }
@@ -472,6 +506,40 @@ bool handle_incoming_frame(struct can_frame *frame)
 
     LOG_DBG("Unhandled frame id=0x%03X", frame->id);
     return false;
+}
+
+/* ================================================================
+ *   UNIQUE-ID HANDSHAKE
+ * ================================================================ */
+
+void can_announce_uid(void)
+{
+    /*
+     * Populate g_hw_uid from Zephyr hwinfo (chip-unique serial number).
+     * Falls back to all-zeros if hwinfo is unavailable.
+     */
+    uint8_t raw[16] = {0};
+    ssize_t len = hwinfo_get_device_id(raw, sizeof(raw));
+    if (len > 0) {
+        /* Use the first HW_UID_LEN bytes (or XOR-fold if shorter) */
+        memset(g_hw_uid, 0, HW_UID_LEN);
+        for (ssize_t i = 0; i < len; i++) {
+            g_hw_uid[i % HW_UID_LEN] ^= raw[i];
+        }
+    } else {
+        LOG_WRN("hwinfo_get_device_id failed (%d), UID will be zero", (int)len);
+    }
+
+    LOG_INF("Hardware UID: %02X:%02X:%02X:%02X  node_id=%d",
+            g_hw_uid[0], g_hw_uid[1], g_hw_uid[2], g_hw_uid[3], g_node_id);
+
+    /* Send ANNOUNCE frame: [sub_cmd, uid0..3, node_id] */
+    uint8_t data[8] = {0};
+    data[0] = ASSIGN_SUBCMD_ANNOUNCE;
+    memcpy(&data[1], g_hw_uid, HW_UID_LEN);
+    data[5] = g_node_id;
+
+    send_can_frame(ASSIGN_ID, data, 6, false);
 }
 
 /* ================================================================

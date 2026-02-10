@@ -36,8 +36,33 @@ enum CAN_IDs {
 #define CAN_MASK_MOTOR      0x7F00      // Motor commands 0x30xx
 #define CAN_MASK_SERVO      0x7F00      // Servo commands 0x40xx
 
+/* ================================================================
+ *   ASSIGN_ID sub-commands  (data[0] of an ASSIGN_ID frame)
+ * ================================================================
+ *   Multiple Teensies share the same CAN bus.  Each one has a
+ *   hardware-unique ID (Zephyr hwinfo or manual).  The CAN master
+ *   uses the following protocol:
+ *
+ *   1. Master sends  ASSIGN_ID  with sub-cmd ASSIGN_SUBCMD_QUERY_UID.
+ *      All nodes respond with ASSIGN_SUBCMD_ANNOUNCE containing
+ *      their 4-byte UID + current node_id.
+ *
+ *   2. Master sends  ASSIGN_ID  with sub-cmd ASSIGN_SUBCMD_SET,
+ *      including the target UID (4 bytes) and the new node_id.
+ *      Only the node whose UID matches applies the new ID.
+ * ================================================================ */
+#define ASSIGN_SUBCMD_QUERY_UID  0x01   /* Master → all : "who's there?" */
+#define ASSIGN_SUBCMD_ANNOUNCE   0x02   /* Node  → master: UID + current ID */
+#define ASSIGN_SUBCMD_SET        0x03   /* Master → node : UID + new ID    */
+
+/* Maximum hardware UID length in bytes (we use the first 4) */
+#define HW_UID_LEN               4
+
 /* Node ID - can be configured via ASSIGN_ID command */
 extern uint8_t g_node_id;
+
+/* Hardware unique ID (populated at boot from hwinfo or config) */
+extern uint8_t g_hw_uid[HW_UID_LEN];
 
 /* CAN device accessor */
 const struct device* get_can_device(void);
@@ -53,6 +78,10 @@ bool send_motor_status(uint8_t motor_id, uint8_t state, int16_t velocity,
                        int16_t position, uint8_t fault, uint8_t temp);
 bool send_servo_status(uint8_t servo_id, uint8_t state, int16_t current_angle,
                        int16_t target_angle, uint8_t load, uint8_t fault);
+
+/* Unique-ID handshake – call once after CAN init to populate g_hw_uid
+ * and broadcast an ANNOUNCE so the master knows we exist. */
+void can_announce_uid(void);
 
 /* Message handling */
 bool handle_incoming_frame(struct can_frame *frame);

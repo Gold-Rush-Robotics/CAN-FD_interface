@@ -1,0 +1,140 @@
+# ============================================================
+#  GRR CAN-FD Board Configuration
+# ============================================================
+#  Each Teensy on the CAN bus gets its own YAML file.
+#  At build time a CMake script converts this into a generated
+#  C header (board_config_generated.h) that main.cpp includes.
+# ============================================================
+
+# --- Board identity ------------------------------------------
+board:
+  # Human-readable name shown in logs / QUERY responses
+  name: "drive_base"
+
+  # 8-bit CAN node ID (0x01-0xFE).  0xFF = unassigned (will be
+  # assigned at runtime via ASSIGN_ID).  Each Teensy MUST have
+  # a unique node_id on the CAN bus.
+  node_id: 0x01
+
+  # Hardware-unique identifier source used in the ASSIGN_ID
+  # handshake so the master can distinguish multiple Teensies.
+  #   "hwinfo"   → use Zephyr hwinfo_get_device_id() (chip UID)
+  #   "manual"   → use the value in unique_id below
+  unique_id_source: "hwinfo"
+  unique_id: 0x00000000        # only used when unique_id_source = manual
+
+# --- CAN bus parameters --------------------------------------
+can:
+  nominal_bitrate: 1000000     # 1 Mbps
+  data_bitrate:    2000000     # 2 Mbps (FD)
+  heartbeat_ms:    1000
+  status_ms:       100
+  control_loop_hz: 100
+
+# --- Brushed DC motors (H-bridge: DIR / PWM / SLP / FLT) -----
+brushed_motors:
+  - id: 1
+    joint_name: "front_left_wheel"
+    pwm_label: "pwm1"         # devicetree nodelabel
+    pwm_channel: 0
+    pwm_frequency_hz: 20000
+    gpio_label: "gpio0"
+    dir_pin: 10
+    slp_pin: 11
+    flt_pin: 12
+    encoder:
+      gpio_label: "gpio0"
+      a_pin: 14
+      b_pin: 15
+      ticks_per_rev: 1440
+    current_sense:
+      adc_label: "adc0"
+      channel: 0
+      overcurrent_ma: 8000
+    pid:
+      kp: 2.0
+      ki: 0.05
+      kd: 0.2
+    limits:
+      max_velocity: 3000       # RPM
+      max_acceleration: 1500   # RPM/s
+      min_position: -1000000
+      max_position:  1000000
+      max_duty: 95.0
+
+  - id: 2
+    joint_name: "front_right_wheel"
+    pwm_label: "pwm1"
+    pwm_channel: 1
+    pwm_frequency_hz: 20000
+    gpio_label: "gpio0"
+    dir_pin: 16
+    slp_pin: 17
+    flt_pin: 18
+    encoder:
+      gpio_label: "gpio0"
+      a_pin: 20
+      b_pin: 21
+      ticks_per_rev: 1440
+    current_sense:
+      adc_label: "adc0"
+      channel: 1
+      overcurrent_ma: 8000
+    pid:
+      kp: 2.0
+      ki: 0.05
+      kd: 0.2
+    limits:
+      max_velocity: 3000
+      max_acceleration: 1500
+      min_position: -1000000
+      max_position:  1000000
+      max_duty: 95.0
+
+# --- Brushless motors (ESC / FOC) ----------------------------
+brushless_motors: []
+#  - id: 3
+#    joint_name: "spindle"
+#    pwm_label: "pwm2"
+#    pwm_channel: 0
+#    pwm_period_ns: 50000
+#    gpio_label: "gpio0"
+#    enable_pin: 22
+#    direction_pin: 23
+#    brake_pin: 24
+#    fault_pin: 25
+#    pid:
+#      kp: 1.0
+#      ki: 0.01
+#      kd: 0.1
+#    limits:
+#      max_velocity: 10000
+#      max_acceleration: 5000
+#      min_position: -100000
+#      max_position:  100000
+
+# --- PWM Servos -----------------------------------------------
+servos:
+  - id: 1
+    joint_name: "pan"
+    pwm_label: "pwm2"
+    pwm_channel: 0
+    angle_min: -900            # 0.1-degree units → -90.0°
+    angle_max:  900
+    angle_offset: 0
+    speed_dps: 180             # degrees per second
+    pwm_min_us:  500
+    pwm_max_us: 2500
+    pwm_period_us: 20000
+
+  - id: 2
+    joint_name: "tilt"
+    pwm_label: "pwm2"
+    pwm_channel: 1
+    angle_min: -450
+    angle_max:  450
+    angle_offset: 0
+    speed_dps: 120
+    pwm_min_us:  500
+    pwm_max_us: 2500
+    pwm_period_us: 20000
