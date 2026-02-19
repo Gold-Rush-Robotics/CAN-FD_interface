@@ -1,7 +1,7 @@
 #include "motor_controller.h"
 
-MotorController::MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin)
-    : _dirPin(dirPin), _pwmPin(pwmPin), _slpPin(slpPin), _fltPin(fltPin), _encA(encA), _encB(encB), _csPin(csPin) {
+MotorController::MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin, int starting_direction)
+    : _dirPin(dirPin), _pwmPin(pwmPin), _slpPin(slpPin), _fltPin(fltPin), _encA(encA), _encB(encB), _csPin(csPin), starting_direction(starting_direction) {
   _encoder = new Encoder(_encA, _encB);
   if (!_encoder) {
     Serial.println("ERROR: Failed to allocate Encoder");
@@ -25,7 +25,7 @@ bool MotorController::begin() {
 void MotorController::setSpeed(int pwmVal) {
   pwmVal = constrain(pwmVal, -255, 255);
   digitalWrite(_slpPin, HIGH);
-  digitalWrite(_dirPin, pwmVal >= 0 ? HIGH : LOW);
+  digitalWrite(_dirPin, pwmVal*starting_direction >= 0 ? HIGH : LOW);
   analogWrite(_pwmPin, abs(pwmVal));
 }
 
@@ -33,6 +33,7 @@ void MotorController::setSpeedRPM(float rpm) {
   int pwm = map((int)rpm, -100, 100, -255, 255);
   setSpeed(pwm);
 }
+
 
 float MotorController::getRPM() {
   if (!_encoder) {

@@ -7,22 +7,22 @@ bool CANInterface::begin(const String& node_role) {
   can.begin();
   can.setBaudRate(1000000); // Match working code: 100 kbps
 
-  if (node_role == "FRONT") {
-    rxId = 0x100;
-    txId = 0x101;
-  } else if (node_role == "REAR") {
-    rxId = 0x200;
-    txId = 0x201;
-  } else if (node_role == "LEFT") {
-    rxId = 0x300;
-    txId = 0x301;
-  } else if (node_role == "RIGHT") {
-    rxId = 0x400;
-    txId = 0x401;
-  } else {
-    rxId = 0x7FF;
-    txId = 0x7FF;
-  }
+  // if (node_role == "FRONT") {
+  rxId = 0x100;
+  txId = 0x101;
+  // } else if (node_role == "REAR") {
+  //   rxId = 0x200;
+  //   txId = 0x201;
+  // } else if (node_role == "LEFT") {
+  //   rxId = 0x300;
+  //   txId = 0x301;
+  // } else if (node_role == "RIGHT") {
+  //   rxId = 0x400;
+  //   txId = 0x401;
+  // } else {
+  //   rxId = 0x7FF;
+  //   txId = 0x7FF;
+  // }
 
   // Test CAN initialization
   CAN_message_t test_msg;
@@ -33,7 +33,7 @@ bool CANInterface::begin(const String& node_role) {
     CAN_error_t err;
     if (can.error(err, true)) {
       Serial.print("Initialization error, ESR1: 0x");
-      Serial.println(err.ESR1, HEX);
+      Serial.println(err.ESR1, HEX);  
     }
     return false;
   }

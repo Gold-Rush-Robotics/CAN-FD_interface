@@ -1,5 +1,5 @@
-#ifndef MOTOR_CONTROLLER_H
-#define MOTOR_CONTROLLER_H
+#ifndef BLDC_MOTOR_CONTROLLER_H
+#define BLDC_MOTOR_CONTROLLER_H
 
 #include <Arduino.h>
 #include <Encoder.h>
@@ -39,7 +39,7 @@ enum BrushlessMotorState {
     BLDC_STATE_ESTOP = 4
 };
 
-class MotorController {
+class BrushlessMotorController {
 public:
     /**
      * Constructor for A89301 brushless motor driver
@@ -52,10 +52,10 @@ public:
      * @param encC      Encoder channel C (EN_OUTC) - for commutation or index
      * @param fgPin     Frequency generator input (speed feedback from motor)
      */
-    MotorController(int dirPin, int spdPin, int brakePin, int faultPin, 
+    BrushlessMotorController(int dirPin, int spdPin, int brakePin, int faultPin, 
                     int encA, int encB, int encC, int fgPin);
     
-    ~MotorController();
+    ~BrushlessMotorController();
     
     /**
      * Initialize motor controller hardware
@@ -211,7 +211,7 @@ private:
     int _faultBlinkCount;
     
     // Static ISR handling for FG pin
-    static MotorController* _instances[4];
+    static BrushlessMotorController* _instances[4];
     static int _instanceCount;
     int _instanceIndex;
     static void fgISR0();

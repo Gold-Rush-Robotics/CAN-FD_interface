@@ -1,24 +1,24 @@
 #include "bldc_motor_controller.h"
 
 /* Static member initialization */
-MotorController* MotorController::_instances[4] = {nullptr, nullptr, nullptr, nullptr};
-int MotorController::_instanceCount = 0;
+BrushlessMotorController* BrushlessMotorController::_instances[4] = {nullptr, nullptr, nullptr, nullptr};
+int BrushlessMotorController::_instanceCount = 0;
 
 /* Static ISR handlers for FG pin interrupts */
-void MotorController::fgISR0() {
+void BrushlessMotorController::fgISR0() {
     if (_instances[0]) _instances[0]->handleFGPulse();
 }
-void MotorController::fgISR1() {
+void BrushlessMotorController::fgISR1() {
     if (_instances[1]) _instances[1]->handleFGPulse();
 }
-void MotorController::fgISR2() {
+void BrushlessMotorController::fgISR2() {
     if (_instances[2]) _instances[2]->handleFGPulse();
 }
-void MotorController::fgISR3() {
+void BrushlessMotorController::fgISR3() {
     if (_instances[3]) _instances[3]->handleFGPulse();
 }
 
-MotorController::MotorController(int dirPin, int spdPin, int brakePin, int faultPin,
+BrushlessMotorController::BrushlessMotorController(int dirPin, int spdPin, int brakePin, int faultPin,
                                  int encA, int encB, int encC, int fgPin)
     : _dirPin(dirPin), _spdPin(spdPin), _brakePin(brakePin), _faultPin(faultPin),
       _encA(encA), _encB(encB), _encC(encC), _fgPin(fgPin),
@@ -43,7 +43,7 @@ MotorController::MotorController(int dirPin, int spdPin, int brakePin, int fault
     }
 }
 
-MotorController::~MotorController() {
+BrushlessMotorController::~BrushlessMotorController() {
     /* Disable motor before destruction */
     emergencyStop();
     
@@ -59,7 +59,7 @@ MotorController::~MotorController() {
     }
 }
 
-bool MotorController::begin() {
+bool BrushlessMotorController::begin() {
     if (!_encoder) {
         Serial.println("ERROR: Encoder not initialized");
         return false;
@@ -140,11 +140,11 @@ bool MotorController::begin() {
     return true;
 }
 
-void MotorController::handleFGPulse() {
+void BrushlessMotorController::handleFGPulse() {
     _fgPulseCount++;
 }
 
-void MotorController::setSpeed(int pwmVal) {
+void BrushlessMotorController::setSpeed(int pwmVal) {
     /* Check for fault or E-stop state */
     if (_state == BLDC_STATE_FAULT || _state == BLDC_STATE_ESTOP) {
         Serial.println("WARNING: Cannot set speed while faulted or E-stopped");
@@ -179,7 +179,7 @@ void MotorController::setSpeed(int pwmVal) {
     }
 }
 
-void MotorController::setSpeedRPM(float rpm) {
+void BrushlessMotorController::setSpeedRPM(float rpm) {
     /* Map RPM to PWM value */
     float absRPM = abs(rpm);
     if (absRPM > _maxRPM) absRPM = _maxRPM;
@@ -190,14 +190,14 @@ void MotorController::setSpeedRPM(float rpm) {
     setSpeed(pwmVal);
 }
 
-void MotorController::setSpeedPercent(float percent) {
+void BrushlessMotorController::setSpeedPercent(float percent) {
     percent = constrain(percent, -100.0f, 100.0f);
     int pwmVal = (int)((percent / 100.0f) * 255.0f);
     setSpeed(pwmVal);
     
 }
 
-float MotorController::getRPM() {
+float BrushlessMotorController::getRPM() {
     if (!_encoder) {
         Serial.println("ERROR: Encoder not available");
         return 0.0f;
@@ -226,7 +226,7 @@ float MotorController::getRPM() {
     return rpm;
 }
 
-float MotorController::getRPMFromFG() {
+float BrushlessMotorController::getRPMFromFG() {
     unsigned long now = millis();
     unsigned long dt = now - _lastFGTime;
     
@@ -255,21 +255,21 @@ float MotorController::getRPMFromFG() {
     return rpm;
 }
 
-long MotorController::getEncoderPosition() {
+long BrushlessMotorController::getEncoderPosition() {
     if (_encoder) {
         return _encoder->read();
     }
     return 0;
 }
 
-void MotorController::resetEncoder() {
+void BrushlessMotorController::resetEncoder() {
     if (_encoder) {
         _encoder->write(0);
         _lastEncoderCount = 0;
     }
 }
 
-void MotorController::brake() {
+void BrushlessMotorController::brake() {
     /* Engage electrical brake - all motor phases driven low */
     digitalWrite(_brakePin, HIGH);
     _brakeEngaged = true;
@@ -282,7 +282,7 @@ void MotorController::brake() {
     Serial.println("Motor brake engaged");
 }
 
-void MotorController::releaseBrake() {
+void BrushlessMotorController::releaseBrake() {
     digitalWrite(_brakePin, LOW);
     _brakeEngaged = false;
     
@@ -292,7 +292,7 @@ void MotorController::releaseBrake() {
     Serial.println("Motor brake released");
 }
 
-void MotorController::emergencyStop() {
+void BrushlessMotorController::emergencyStop() {
     /* Engage brake */
     brake();
     
@@ -301,7 +301,7 @@ void MotorController::emergencyStop() {
     Serial.println("EMERGENCY STOP activated");
 }
 
-void MotorController::enable() {
+void BrushlessMotorController::enable() {
     if (_state == BLDC_STATE_ESTOP) {
         /* Check for faults before enabling */
         if (isFaulted()) {
@@ -316,16 +316,16 @@ void MotorController::enable() {
     }
 }
 
-bool MotorController::isFaulted() {
+bool BrushlessMotorController::isFaulted() {
     /* FAULT pin is open-drain, normally HIGH, pulled LOW on fault */
     return (digitalRead(_faultPin) == LOW);
 }
 
-int MotorController::getFaultPin() {
+int BrushlessMotorController::getFaultPin() {
     return _faultPin;
 }
 
-BrushlessFaultCode MotorController::readFaultCode() {
+BrushlessFaultCode BrushlessMotorController::readFaultCode() {
     if (!isFaulted()) {
         return FAULT_NONE;
     }
@@ -349,7 +349,7 @@ BrushlessFaultCode MotorController::readFaultCode() {
     return FAULT_UNKNOWN;
 }
 
-BrushlessMotorState MotorController::getState() {
+BrushlessMotorState BrushlessMotorController::getState() {
     /* Update state based on fault pin */
     if (isFaulted() && _state != BLDC_STATE_ESTOP) {
         _state = BLDC_STATE_FAULT;
@@ -357,12 +357,12 @@ BrushlessMotorState MotorController::getState() {
     return _state;
 }
 
-void MotorController::setDirection(bool forward) {
+void BrushlessMotorController::setDirection(bool forward) {
     _direction = forward;
     digitalWrite(_dirPin, forward ? LOW : HIGH);
 }
 
-void MotorController::setEncoderParams(int ticksPerRev, float gearRatio) {
+void BrushlessMotorController::setEncoderParams(int ticksPerRev, float gearRatio) {
     _ticksPerRev = ticksPerRev;
     _gearRatio = gearRatio;
     Serial.print("Encoder params set: ");
@@ -371,14 +371,14 @@ void MotorController::setEncoderParams(int ticksPerRev, float gearRatio) {
     Serial.println(gearRatio);
 }
 
-void MotorController::setFGParams(int pulsesPerRev) {
+void BrushlessMotorController::setFGParams(int pulsesPerRev) {
     _fgPulsesPerRev = pulsesPerRev;
     Serial.print("FG params set: ");
     Serial.print(pulsesPerRev);
     Serial.println(" pulses/rev");
 }
 
-void MotorController::setMaxRPM(float maxRPM) {
+void BrushlessMotorController::setMaxRPM(float maxRPM) {
     _maxRPM = maxRPM;
     Serial.print("Max RPM set to: ");
     Serial.println(maxRPM);
