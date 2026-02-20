@@ -10,6 +10,7 @@ void initKnobServo(int servoPin){
     }
 }
 
+// Counter Clockwise < 1500 < Clockwise | Closer to 1500 = slower
 void spinKnobServo(int pulse){
     knobServo.writeMicroseconds(pulse);
 }
