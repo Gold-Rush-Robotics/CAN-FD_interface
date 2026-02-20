@@ -52,6 +52,17 @@ MecanumController mecanum(0.15, 0.14, 0.075); // Example wheelbase and trackwidt
 // CAN interface
 CANInterface canInterface;
 
+void setAllMotorSpeeds(float* wheelSpeeds) {
+  Serial.print("Wheel speeds: ");
+  for (int i = 0; i < 4; i++) {
+    Serial.print(wheelSpeeds[i]);
+    motors[i]->setSpeedRPM(wheelSpeeds[i] * 30.0/1.6);
+
+    Serial.print(" ");
+  }
+  Serial.println();
+}
+
 void setup() {
   Serial.begin(115200);
   while (!Serial && millis() < 2000);
@@ -114,128 +125,77 @@ void loop() {
     Serial.println("WARNING: Motor4 fault detected");
   }
 
-  float* wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.6, -0.1, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
-
-    Serial.print(" ");
-  }
-  Serial.println();
-
-  delay(1000);
-
-  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.0, 0.5, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
-
-    Serial.print(" ");
-  }
-  Serial.println();
-
-  delay(500);
-
-    wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.5, 0.0, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
-
-    Serial.print(" ");
-  }
-  Serial.println();
-
-  delay(500);
-
-    wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.0, 1.0, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
-
-    Serial.print(" ");
-  }
-  Serial.println();
-
+  // -- PRESS BUTTON 3 TIMES AND GO BACK --
+  // Forward
+  float* wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.2, 0, 0.0);
+  setAllMotorSpeeds(wheelSpeeds);
   delay(2000);
 
-    wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-1.0, 0.3, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
+  // Back
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-0.2, 0, 0.0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(600);
 
-    Serial.print(" ");
-  }
-  Serial.println();
+  // Forward
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.2, 0, 0.0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(800);
 
-  delay(2000);
+  // Back
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-0.2, 0, 0.0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(600);
 
-    wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(1.0, 0.3, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
+  // Forward
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.2, 0, 0.0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(800);
 
-    Serial.print(" ");
-  }
-  Serial.println();
+  // -- GO TO SPINNY THING --
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-0.05, 0.1, 0.0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(1600);
 
-  delay(2000);
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.2, 0, 0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(1600);
 
-  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.0, -0.5, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.05, 0.25, 0.0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(4400);
 
-    Serial.print(" ");
-  }
-  Serial.println();
-
-  delay(500);
-
-    wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.5, 0.0, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
-
-    Serial.print(" ");
-  }
-  Serial.println();
-
-  delay(500);
-
-    wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.1, -1.0, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
-
-    Serial.print(" ");
-  }
-  Serial.println();
-
-  delay(2000);
-
-    wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-0.5, -0.1, 0.0); // Example: move forward at half speed
-  Serial.print("Wheel speeds: ");
-  for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 100.0/1.6); // Scale to max RPM (example)
-
-    Serial.print(" ");
-  }
-  Serial.println();
-
-  delay(2000);
-
-
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.05, -0.25, 0.0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(150);
   
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-0.2, 0.0, 0.0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(600);
+
+  // TURN
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0, 0, 0.5);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(1600);
+
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.2, 0, 0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(1100);
+
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.05, -0.15, 0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(3000);
+
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0, 0.15, 0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(50);
+
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.1, 0, 0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(5000);
+
+
+  // -- GO BACK HOME --
+  // wheelSpeeds = mecanum.calculateMecanumWheelSpeeds()
 
 
   for (int i = 0; i < 4; i++) {
@@ -249,7 +209,7 @@ void loop() {
   // Serial.print("Wheel speeds: ");
   // for (int i = 0; i < 4; i++) {
   //   Serial.print(wheelSpeeds[i]);
-  //   motors[i]->setSpeedRPM(wheelSpeeds[i] * 100); // Scale to max RPM (example)
+  //   motors[i]->setSpeedRPM(wheelSpeeds[i] * 100);
   //   Serial.print(" ");
   // }
   // Serial.println();
@@ -260,7 +220,7 @@ void loop() {
   // Serial.print("Wheel speeds: ");
   // for (int i = 0; i < 4; i++) {
   //   Serial.print(wheelSpeeds[i]);
-  //   motors[i]->setSpeedRPM(wheelSpeeds[i] * 100); // Scale to max RPM (example)
+  //   motors[i]->setSpeedRPM(wheelSpeeds[i] * 100);
   //   Serial.print(" ");
   // }
   // Serial.println();
@@ -362,6 +322,5 @@ void loop() {
     Serial.println("Feedback skipped (CAN disabled)");
     #endif
   }
-
   delay(10);
 }
