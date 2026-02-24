@@ -129,7 +129,7 @@ void loop() {
   // Forward
   float* wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.2, 0, 0.0);
   setAllMotorSpeeds(wheelSpeeds);
-  delay(2000);
+  delay(1850);
 
   // Back
   wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-0.2, 0, 0.0);
@@ -192,6 +192,19 @@ void loop() {
   wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.1, 0, 0);
   setAllMotorSpeeds(wheelSpeeds);
   delay(5000);
+
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-.01, 0.1, 0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(1200);
+
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-.1, 0, 0);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(250);
+
+  wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0, 0, 0.5);
+  setAllMotorSpeeds(wheelSpeeds);
+  delay(1500);
+
 
 
   // -- GO BACK HOME --
