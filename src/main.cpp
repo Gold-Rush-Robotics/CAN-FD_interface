@@ -9,7 +9,7 @@ void setup(){
 
 void loop(){
   delay(5000);
-  spinKnobServo(2000);
+  spinKnobServo(1000);
   delay(5000);
 }
 
