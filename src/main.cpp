@@ -13,7 +13,7 @@ int solenoid7 = 2;
 int solenoid8 = 4;
 int solenoidPound = 5;
 int delayAfterHigh= 100;
-int delayAfterLow = 2000;
+int delayAfterLow = 400;
 int soleArr[6] = {solenoid7, solenoid3, solenoid7, solenoid3, solenoid8, solenoidPound};
 int startDelay = 3000;
 
