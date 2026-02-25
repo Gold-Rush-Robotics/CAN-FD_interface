@@ -129,7 +129,7 @@ void loop() {
   // -- PRESS BUTTON 3 TIMES AND GO BACK --
   // Forward
   setAllMotorSpeeds(0.2, 0, 0.0);
-  delay(1850);
+  delay(2300);
 
   // Back
   setAllMotorSpeeds(-0.2, 0, 0.0);
@@ -149,16 +149,19 @@ void loop() {
 
   // -- GO TO SPINNY THING --
   setAllMotorSpeeds(-0.05, 0.1, 0.0);
-  delay(1600);
+  delay(1800);
 
   setAllMotorSpeeds(0.2, 0, 0);
-  delay(1600);
+  delay(1800);
 
   setAllMotorSpeeds(0.05, 0.25, 0.0);
   delay(4400);
 
-  setAllMotorSpeeds(0.05, -0.25, 0.0);
-  delay(150);
+  setAllMotorSpeeds(0.1, -0.25, 0.0);
+  delay(220);
+
+  setAllMotorSpeeds(0.2, 0, 0);
+  delay(200);
   
   setAllMotorSpeeds(-0.2, 0.0, 0.0);
   delay(600);
@@ -170,23 +173,43 @@ void loop() {
   setAllMotorSpeeds(0.2, 0, 0);
   delay(1100);
 
-  setAllMotorSpeeds(0.05, -0.15, 0);
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(200);
+
+  setAllMotorSpeeds(0, -0.125, 0);
   delay(3000);
 
-  setAllMotorSpeeds(0, 0.15, 0);
-  delay(50);
+  setAllMotorSpeeds(0.2, -0.2, 0);
+  delay(7000);
 
-  setAllMotorSpeeds(0.1, 0, 0);
-  delay(5000);
+  // -- GO TO KEYPAD --
+  setAllMotorSpeeds(-0.1, 0.1, 0);
+  delay(200);
 
-  setAllMotorSpeeds(-.01, 0.1, 0);
-  delay(1200);
+  setAllMotorSpeeds(0, 0.2, 0);
+  delay(500);
 
-  setAllMotorSpeeds(-.1, 0, 0);
-  delay(250);
+  setAllMotorSpeeds(0.2, 0, 0);
+  delay(500);
 
-  setAllMotorSpeeds(0, 0, 0.5);
-  delay(1500);
+  setAllMotorSpeeds(-0.2, 0, 0);
+  delay(700);
+
+  // Turn
+  setAllMotorSpeeds(0, 0, -0.5);
+  delay(1600);
+
+  setAllMotorSpeeds(0.2, -0.075, 0);
+  delay(1600);
+
+  setAllMotorSpeeds(0.05, -0.25, 0.0);
+  delay(2000);
+
+  setAllMotorSpeeds(-0.2, 0, 0);
+  delay(1900);
+
+  setAllMotorSpeeds(-0.025, 0.025, 0.0);
+  delay(10000);
 
 
 
