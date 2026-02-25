@@ -30,7 +30,7 @@ void MotorController::setSpeed(int pwmVal) {
 }
 
 void MotorController::setSpeedRPM(float rpm) {
-  int pwm = map((int)rpm, -100, 100, -255, 255);
+  int pwm = map(rpm, -100, 100, -255, 255);
   setSpeed(pwm);
 }
 
