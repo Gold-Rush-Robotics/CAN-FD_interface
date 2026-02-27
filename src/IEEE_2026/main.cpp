@@ -128,27 +128,27 @@ void loop() {
 
   // -- PRESS BUTTON 3 TIMES AND GO BACK --
   // Forward
-  setAllMotorSpeeds(0.2, 0, 0.0);
+  setAllMotorSpeeds(0.2, 0, 0);
   delay(2300);
 
   // Back
-  setAllMotorSpeeds(-0.2, 0, 0.0);
+  setAllMotorSpeeds(-0.2, 0, 0);
   delay(600);
 
   // Forward
-  setAllMotorSpeeds(0.2, 0, 0.0);
-  delay(800);
+  setAllMotorSpeeds(0.2, 0, 0);
+  delay(900);
 
   // Back
-  setAllMotorSpeeds(-0.2, 0, 0.0);
+  setAllMotorSpeeds(-0.2, 0, 0);
   delay(600);
 
   // Forward
-  setAllMotorSpeeds(0.2, 0, 0.0);
-  delay(800);
+  setAllMotorSpeeds(0.2, 0, 0);
+  delay(900);
 
   // -- GO TO SPINNY THING --
-  setAllMotorSpeeds(-0.05, 0.1, 0.0);
+  setAllMotorSpeeds(-0.05, 0.1, 0);
   delay(1800);
 
   // Push duck into blue
@@ -161,13 +161,16 @@ void loop() {
   setAllMotorSpeeds(0.05, 0.25, 0);
   delay(4100);
 
+  setAllMotorSpeeds(0.2, 0, 0);
+  delay(800);
+
   setAllMotorSpeeds(0.1, -0.25, 0);
-  delay(220);
+  delay(300);
 
   setAllMotorSpeeds(0.2, 0, 0);
   delay(400);
   
-  setAllMotorSpeeds(-0.2, 0.075, 0);
+  setAllMotorSpeeds(-0.2, 0.05, 0);
   delay(600);
 
   // TURN
@@ -175,7 +178,7 @@ void loop() {
   delay(1500);
 
   setAllMotorSpeeds(0.2, 0, 0);
-  delay(1000);
+  delay(1100);
 
   setAllMotorSpeeds(-0.1, 0, 0);
   delay(200);
@@ -184,7 +187,7 @@ void loop() {
   delay(3000);
 
   setAllMotorSpeeds(0.1, -0.1, 0);
-  delay(7000);
+  delay(3000);
 
   // -- GO TO KEYPAD --
   setAllMotorSpeeds(-0.1, 0.1, 0);
@@ -203,7 +206,7 @@ void loop() {
   setAllMotorSpeeds(0, 0, -0.5);
   delay(1600);
 
-  setAllMotorSpeeds(0.2, -0.0375, 0);
+  setAllMotorSpeeds(0.2, -0.1, 0);
   delay(1600);
 
   // Slam into button antenna
@@ -236,9 +239,16 @@ void loop() {
   setAllMotorSpeeds(0, 0.15, 0);
   delay(550);
 
-  // Push into keypad
-  setAllMotorSpeeds(-0.025, 0.025, 0);
-  delay(30000);
+  // 3 attempts at hitting keypad
+  for (int i = 0; i < 3; i++) {
+    // Push into keypad
+    setAllMotorSpeeds(-0.025, 0.025, 0);
+    delay(12000); // align + 2-3 attempts
+  
+    // Go back for realignment
+    setAllMotorSpeeds(0.1, -0.12, 0);
+    delay(500);
+  }
 
   // -- PUSH DUCK TO BLUE SQUARE --
 
@@ -248,7 +258,7 @@ void loop() {
 
   // Push duck into blue square
   setAllMotorSpeeds(0.15, 0.075, 0);
-  delay(1600);
+  delay(1400);
 
   // -- GO HOME --
   setAllMotorSpeeds(-0.15, 0, 0);
