@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <TimeLib.h>
 #include "can_interface.h"
 #include "motor_controller.h"
 #include "mecanum_controller.h"
@@ -39,15 +40,28 @@
 #define DISABLE_CAN 1
 #define LED_PIN 13
 
+double Kp = 2;
+double Ki = 5;
+double Kd = 1;
+
 // Motor controllers
-MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1);
-MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2);
-MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, -1); // Reverse direction for rear motors
-MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1); // Reverse direction for rear motors
+MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1, Kp, Ki, Kd);
+MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, 1, Kp, Ki, Kd);
+MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, -1, Kp, Ki, Kd); // Reverse direction for rear motors
+MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1, Kp, Ki, Kd); // Reverse direction for rear motors
 
 MotorController* motors[4] = {&motor1, &motor2, &motor3, &motor4};
 
 MecanumController mecanum(0.15, 0.14, 0.075); // Example wheelbase and trackwidth in meters
+
+void PidDelay(int ms) {
+  unsigned long startTime = millis();
+  while(millis() < startTime + ms) {
+    for(int i = 0; i < 4; i++) {
+      motors[i]->PidLoop();
+    }
+  }
+}
 
 // CAN interface
 CANInterface canInterface;
@@ -124,7 +138,7 @@ void loop() {
   }
   Serial.println();
 
-  delay(1000);
+  PidDelay(1000);
 
   wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.0, 0.5, 0.0); // Example: move forward at half speed
   Serial.print("Wheel speeds: ");
@@ -136,7 +150,7 @@ void loop() {
   }
   Serial.println();
 
-  delay(500);
+  PidDelay(500);
 
     wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(0.5, 0.0, 0.0); // Example: move forward at half speed
   Serial.print("Wheel speeds: ");
