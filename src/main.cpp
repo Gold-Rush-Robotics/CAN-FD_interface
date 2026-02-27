@@ -15,7 +15,9 @@ int solenoidPound = 5;
 int delayAfterHigh= 100;
 int delayAfterLow = 400;
 int soleArr[6] = {solenoid7, solenoid3, solenoid7, solenoid3, solenoid8, solenoidPound};
-int startDelay = 3000;
+int startDelay = 44000;
+int repeatDelay = 500;
+int repeatCount = 10;
 
 void setup() {
   // Pins set as output:
@@ -43,10 +45,16 @@ void funcInputter(int num)
 
 void loop() {
   // Prototype Optimization 2
-  for (int i = 0; i<6; i++)
+
+  for (int i = 0; i < repeatCount; i++)
   {
-    funcInputter(soleArr[i]);
+    for (int i = 0; i<6; i++)
+    {
+      funcInputter(soleArr[i]);
+    }
+  
+    delay(repeatDelay);
   }
 
-  delay(5000);
+  while (true);
 }
