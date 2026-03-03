@@ -6,7 +6,7 @@
 void setup(){
   initKnobServo(KNOB_PIN);
 }
-
+// main loop
 void loop(){
   delay(5000);
   spinKnobServo(2000);
