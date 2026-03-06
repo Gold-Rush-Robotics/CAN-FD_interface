@@ -6,9 +6,9 @@
 #include "LED.h"
 
 struct Color {
-  u8 r;
-  u8 g;
-  u8 b;
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
 };
 
 struct ReferenceColor {
@@ -64,10 +64,10 @@ namespace ColorSensor {
         Serial.println(")");
     }
 
-    void readThenSetLED(int led) {
+    void readThenSetLED(size_t led) {
         float r, g, b;
         sensor.getRGB(&r, &g, &b);
-        Color read = {r, g, b};
+        Color read = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
 
         #ifdef COLOR_SENSOR_DEBUG
         Serial.print("Color sensor read: ");
@@ -75,12 +75,12 @@ namespace ColorSensor {
         #endif
 
         float lowestDistance = INFINITY;
-        const ReferenceColor* closestColor = nullptr;
+        Color closestColor = {LOW, LOW, LOW};
         for (ReferenceColor color : COLORS) {
             float distance = calculateEuclidianDistance(read, color.match);
             if (distance < lowestDistance) {
                 lowestDistance = distance;
-                closestColor = &color;
+                closestColor = color.led;
             }
 
             #ifdef COLOR_SENSOR_DEBUG
@@ -91,7 +91,6 @@ namespace ColorSensor {
             #endif
         }
 
-        Color ledColor = closestColor->led;
-        setLedColor(led, ledColor.r, ledColor.g, ledColor.b);
+        setLedColor(led, closestColor.r, closestColor.g, closestColor.b);
     }
 }

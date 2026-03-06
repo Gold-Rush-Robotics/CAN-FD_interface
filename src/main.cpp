@@ -11,8 +11,8 @@ void setup() {
     Serial.begin(115200);
 
     // LEDs
-    for (int i = 0; i < std::size(LEDS); i++) {
-        for (int j = 0; j < 3; j++) {
+    for (size_t i = 0; i < std::size(LEDS); i++) {
+        for (size_t j = 0; j < 3; j++) {
             pinMode(LEDS[i][j], OUTPUT);
         }
     }
@@ -35,7 +35,7 @@ void setup() {
 void loop() {
     Arm::move(ArmPositions::READ_COLOR);
 
-    delay(1000);
+    delay(3000);
     ColorSensor::readThenSetLED(0);
     
     Arm::move(ArmPositions::COLLAPSED);
