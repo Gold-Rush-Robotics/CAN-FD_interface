@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "../include/can_interface.h"
-#include "../include/motor_controller.h"
-#include "../include/mecanum_controller.h"
+#include "can_interface.h"
+#include "motor_controller.h"
+#include "mecanum_controller.h"
 
 #define DIR1 4
 #define PWM1 3
@@ -41,8 +41,8 @@
 
 // Motor controllers
 MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1);
-MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2);
-MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, -1); // Reverse direction for rear motors
+MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1);
+MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3); // Reverse direction for rear motors
 MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1); // Reverse direction for rear motors
 
 MotorController* motors[4] = {&motor1, &motor2, &motor3, &motor4};
@@ -128,51 +128,89 @@ void loop() {
 
   // -- PRESS BUTTON 3 TIMES AND GO BACK --
   // Forward
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(2300);
-
-  // Back
-  setAllMotorSpeeds(-0.2, 0, 0);
-  delay(600);
-
-  // Forward
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(900);
-
-  // Back
-  setAllMotorSpeeds(-0.2, 0, 0);
-  delay(600);
-
-  // Forward
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(900);
-
-  // -- GO TO SPINNY THING --
-  setAllMotorSpeeds(-0.05, 0.1, 0);
-  delay(1800);
-
-  // Push duck into blue
-  setAllMotorSpeeds(0, 0.25, 0);
-  delay(300);
-
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(1800);
-
-  setAllMotorSpeeds(0.05, 0.25, 0);
+  setAllMotorSpeeds(-0.1, 0, 0);
   delay(4100);
 
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(800);
-
-  setAllMotorSpeeds(0.1, -0.25, 0);
-  delay(300);
-
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(400);
-  
-  setAllMotorSpeeds(-0.2, 0.05, 0);
+  // Back
+  setAllMotorSpeeds(0.1, 0, 0);
   delay(600);
 
+  // Forward
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(900);
+
+  // Back
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(600);
+
+  //Pause for arm
+  setAllMotorSpeeds(0, 0, 0);
+  delay(1000);
+
+  // Forward
+  setAllMotorSpeeds(-0.1, -0.04, 0);
+  delay(900);
+
+  //Pause for read
+  setAllMotorSpeeds(0, 0, 0);
+  delay(1000);
+
+  // Back
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(600);
+  
+
+  // -- GO TO SPINNY THING --
+  setAllMotorSpeeds(0, -0.1, 0);
+  delay(2500);
+
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(500);
+
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(1000);
+
+  //rotate
+  setAllMotorSpeeds(0, 0, 0.1);
+  delay(1500);
+
+  // This gets close to crater edge
+  // setAllMotorSpeeds(0, -0.1, 0);
+  // delay(3000);
+
+  // setAllMotorSpeeds(-0.1, 0, 0);
+  // delay(2000);
+
+  // setAllMotorSpeeds(0, -0.1, 0);
+  // delay(4500);
+
+  //Stop
+  setAllMotorSpeeds(0, 0, 0);
+  delay(10000000);
+
+  // Push duck into blue
+  // setAllMotorSpeeds(0, 0.25, 0);
+  // delay(300);
+
+  // setAllMotorSpeeds(0.2, 0, 0);
+  // delay(1800);
+
+  // setAllMotorSpeeds(0.05, 0.25, 0);
+  // delay(4100);
+
+  // setAllMotorSpeeds(0.2, 0, 0);
+  // delay(800);
+
+  // setAllMotorSpeeds(0.1, -0.25, 0);
+  // delay(300);
+
+  // setAllMotorSpeeds(0.2, 0, 0);
+  // delay(400);
+  
+  // setAllMotorSpeeds(-0.2, 0.05, 0);
+  // delay(600);
+
+  /*
   // TURN
   setAllMotorSpeeds(0, 0, 0.5);
   delay(1500);
@@ -269,6 +307,8 @@ void loop() {
 
   setAllMotorSpeeds(-0.15, -0.05, 0);
   delay(4000);
+
+  */
 
 
   // -- STOP ALL MOTORS --

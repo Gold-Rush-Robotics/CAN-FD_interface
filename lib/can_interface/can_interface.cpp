@@ -1,4 +1,4 @@
-#include "../include/can_interface.h"
+#include <can_interface.h>
 #include <FlexCAN_T4.h>
 
 FlexCAN_T4<CAN3, RX_SIZE_256, TX_SIZE_16> can; // Use CAN3 to match working code

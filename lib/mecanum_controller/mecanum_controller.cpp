@@ -1,4 +1,4 @@
-#include "../include/mecanum_controller.h"
+#include <mecanum_controller.h>
 
 MecanumController::MecanumController(float wheelBase, float trackWidth, float wheelDiameter)
     : wheelBase(wheelBase), trackWidth(trackWidth), wheelDiameter(wheelDiameter) {
