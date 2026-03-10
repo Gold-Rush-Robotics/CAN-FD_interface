@@ -1,9 +1,9 @@
-// #define COLOR_SENSOR_DEBUG
-// #define ARM_DEBUG
-
 #include "ColorSensor.h"
 #include "LED.h"
 #include "Arm.h"
+
+
+#define ServoSerialPort Serial1
 
 
 void setup() {
@@ -24,21 +24,31 @@ void setup() {
     }
     
     // Arm
-    #define ServoSerialPort Serial1
     ServoSerialPort.begin(1000000);
-    Arm::controller.pSerial = &ServoSerialPort;
-    
-    // Wait to ensure everything sets up
-    delay(1000);
+    Servos::controller.pSerial = &ServoSerialPort;
 }
 
 void loop() {
-    Arm::move(ArmPositions::READ_COLOR);
+    // testAllLeds();
+    // Servos::moveArm(ArmPositions::READ_COLOR);
+    // delay(100000);
 
-    delay(3000);
-    ColorSensor::readThenSetLED(0);
-    
-    Arm::move(ArmPositions::COLLAPSED);
+    //Set start pose
+    Servos::moveArm(ArmPositions::COLLAPSED);
+    delay(6200);
 
-    delay(3000);
+    Servos::moveArm(ArmPositions::READ_COLOR);
+    delay(1000);
+    delay(900);
+    delay(1000);
+    ColorSensor::readThenSetLED(0);  
+    delay(1000);    
+
+    //back up
+    delay(600);
+    Servos::moveArm(ArmPositions::COLLAPSED);
+
+
+    //stop
+    delay(10000000);
 }
