@@ -41,8 +41,8 @@
 
 // Motor controllers
 MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1);
-MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2);
-MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, -1); // Reverse direction for rear motors
+MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1);
+MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3); // Reverse direction for rear motors
 MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1); // Reverse direction for rear motors
 
 MotorController* motors[4] = {&motor1, &motor2, &motor3, &motor4};
@@ -102,6 +102,22 @@ void setup() {
   digitalWrite(LED_PIN, LOW);
 }
 
+void testingMovement() {
+    setAllMotorSpeeds(0, 0, 0.2);
+  delay(2000);
+  setAllMotorSpeeds(0.2, 0, 0);
+  delay(2000);
+  setAllMotorSpeeds(0, 0.2, 0);
+  delay(2000);
+    setAllMotorSpeeds(0, 0, -0.2);
+  delay(2000);
+  setAllMotorSpeeds(-0.2, 0, 0);
+  delay(2000);
+  setAllMotorSpeeds(0, -0.2, 0);
+  delay(2000);
+  setAllMotorSpeeds(0, 0, 0);
+}
+
 void loop() {
   static unsigned long loopCount = 0;
   loopCount++;
@@ -126,6 +142,10 @@ void loop() {
     Serial.println("WARNING: Motor4 fault detected");
   }
 
+
+
+  testingMovement();
+  /*
   // -- PRESS BUTTON 3 TIMES AND GO BACK --
   // Forward
   setAllMotorSpeeds(0.2, 0, 0);
@@ -276,6 +296,7 @@ void loop() {
   while (true) {
     
   }
+  */
 
   // setAllMotorSpeeds(0.0, 0.5, 0.0); // Example: move sidewards at half speed
   // delay(5000);
