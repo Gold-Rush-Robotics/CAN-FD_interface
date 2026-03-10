@@ -67,7 +67,23 @@ namespace ColorSensor {
     void readThenSetLED(size_t led) {
         float r, g, b;
         sensor.getRGB(&r, &g, &b);
-        Color read = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        Color read1 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        delay(100);
+        sensor.getRGB(&r, &g, &b);
+        Color read2 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        delay(100);
+        sensor.getRGB(&r, &g, &b);
+        Color read3 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        delay(100);
+        sensor.getRGB(&r, &g, &b);
+        Color read4 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        delay(100);
+        sensor.getRGB(&r, &g, &b);
+        Color read5 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        uint8_t red = (read1.r + read2.r + read3.r + read4.r + read5.r);
+        uint8_t blue = (read1.b + read2.b + read3.b + read4.b + read5.b);
+        uint8_t green = (read1.g + read2.g + read3.g + read4.g + read5.g);
+        Color readFinal = {red, green, blue};
 
         #ifdef COLOR_SENSOR_DEBUG
         Serial.print("Color sensor read: ");
@@ -77,7 +93,7 @@ namespace ColorSensor {
         float lowestDistance = INFINITY;
         Color closestColor = {LOW, LOW, LOW};
         for (ReferenceColor color : COLORS) {
-            float distance = calculateEuclidianDistance(read, color.match);
+            float distance = calculateEuclidianDistance(readFinal, color.match);
             if (distance < lowestDistance) {
                 lowestDistance = distance;
                 closestColor = color.led;
