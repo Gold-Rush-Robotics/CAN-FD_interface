@@ -1,4 +1,4 @@
-#include "bldc_motor_controller.h"
+#include "../include/bldc_motor_controller.h"
 
 /* Static member initialization */
 BrushlessMotorController* BrushlessMotorController::_instances[4] = {nullptr, nullptr, nullptr, nullptr};

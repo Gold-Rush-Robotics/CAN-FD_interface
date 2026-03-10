@@ -1,4 +1,4 @@
-#include "knob_servo.h"
+#include "../knob_servo.h"
 
 static Servo knobServo;
 static bool isAttached = false;

@@ -1,4 +1,4 @@
-#include "motor_controller.h"
+#include "../include/motor_controller.h"
 
 MotorController::MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin, int starting_direction)
     : _dirPin(dirPin), _pwmPin(pwmPin), _slpPin(slpPin), _fltPin(fltPin), _encA(encA), _encB(encB), _csPin(csPin), starting_direction(starting_direction) {

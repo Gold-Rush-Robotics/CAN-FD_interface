@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "knob_servo.h"
+#include "../knob_servo.h"
 
 #define KNOB_PIN 2
 
