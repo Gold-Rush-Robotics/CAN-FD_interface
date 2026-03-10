@@ -80,9 +80,9 @@ namespace ColorSensor {
         delay(100);
         sensor.getRGB(&r, &g, &b);
         Color read5 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
-        uint8_t red = (read1.r + read2.r + read3.r + read4.r + read5.r);
-        uint8_t blue = (read1.b + read2.b + read3.b + read4.b + read5.b);
-        uint8_t green = (read1.g + read2.g + read3.g + read4.g + read5.g);
+        uint8_t red = (read1.r + read2.r + read3.r + read4.r + read5.r)/5;
+        uint8_t blue = (read1.b + read2.b + read3.b + read4.b + read5.b)/5;
+        uint8_t green = (read1.g + read2.g + read3.g + read4.g + read5.g)/5;
         Color readFinal = {red, green, blue};
 
         #ifdef COLOR_SENSOR_DEBUG
