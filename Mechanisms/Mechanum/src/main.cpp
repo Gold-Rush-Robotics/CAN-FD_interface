@@ -158,40 +158,59 @@ void loop() {
   // Back
   setAllMotorSpeeds(0.1, 0, 0);
   delay(600);
+  
 
+  // -- GO TO SPINNY THING --
+  setAllMotorSpeeds(0, -0.1, 0);
+  delay(2500);
 
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(500);
+
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(1000);
+
+  //rotate
+  setAllMotorSpeeds(0, 0, 0.1);
+  delay(1500);
+
+  // This gets close to crater edge
+  // setAllMotorSpeeds(0, -0.1, 0);
+  // delay(3000);
+
+  // setAllMotorSpeeds(-0.1, 0, 0);
+  // delay(2000);
+
+  // setAllMotorSpeeds(0, -0.1, 0);
+  // delay(4500);
 
   //Stop
   setAllMotorSpeeds(0, 0, 0);
-  delay(1000000000);
-  /*
-
-  // -- GO TO SPINNY THING --
-  setAllMotorSpeeds(-0.05, 0.1, 0);
-  delay(1800);
+  delay(10000000);
 
   // Push duck into blue
-  setAllMotorSpeeds(0, 0.25, 0);
-  delay(300);
+  // setAllMotorSpeeds(0, 0.25, 0);
+  // delay(300);
 
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(1800);
+  // setAllMotorSpeeds(0.2, 0, 0);
+  // delay(1800);
 
-  setAllMotorSpeeds(0.05, 0.25, 0);
-  delay(4100);
+  // setAllMotorSpeeds(0.05, 0.25, 0);
+  // delay(4100);
 
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(800);
+  // setAllMotorSpeeds(0.2, 0, 0);
+  // delay(800);
 
-  setAllMotorSpeeds(0.1, -0.25, 0);
-  delay(300);
+  // setAllMotorSpeeds(0.1, -0.25, 0);
+  // delay(300);
 
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(400);
+  // setAllMotorSpeeds(0.2, 0, 0);
+  // delay(400);
   
-  setAllMotorSpeeds(-0.2, 0.05, 0);
-  delay(600);
+  // setAllMotorSpeeds(-0.2, 0.05, 0);
+  // delay(600);
 
+  /*
   // TURN
   setAllMotorSpeeds(0, 0, 0.5);
   delay(1500);
