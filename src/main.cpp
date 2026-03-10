@@ -8,8 +8,9 @@ void setup(){
 }
 
 void loop(){
-  delay(5000);
+  delay(30000);
   spinKnobServo(1000);
-  delay(5000);
+  delay(15000);
+  spinKnobServo(1500);
 }
 
