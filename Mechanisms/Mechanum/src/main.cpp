@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "../../include/can_interface.h"
-#include "../../include/motor_controller.h"
-#include "../../include/mecanum_controller.h"
+#include "../include/can_interface.h"
+#include "../include/motor_controller.h"
+#include "../include/mecanum_controller.h"
 
 #define DIR1 4
 #define PWM1 3
