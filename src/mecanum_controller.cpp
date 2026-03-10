@@ -23,9 +23,9 @@ float* MecanumController::calculateMecanumWheelSpeeds(float linear_x, float line
     float k = (1.0f / wheelDiameter);
     float offset = (wheelBase + trackWidth);
 
-    wheelSpeeds[0] = k * (linear_x - linear_y - offset * angular_z);
+    wheelSpeeds[0] = k * (linear_x + linear_y - offset * angular_z);
     wheelSpeeds[1] = k * (linear_x + linear_y + offset * angular_z);
-    wheelSpeeds[2] = k * (linear_x + linear_y - offset * angular_z);
+    wheelSpeeds[2] = k * (linear_x - linear_y - offset * angular_z);
     wheelSpeeds[3] = k * (linear_x - linear_y + offset * angular_z);
     
     return wheelSpeeds;
