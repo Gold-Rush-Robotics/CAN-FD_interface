@@ -141,7 +141,6 @@ void loop() {
 
   // -- PRESS BUTTON 3 TIMES AND GO BACK --
   // Forward
-<<<<<<< HEAD
   setAllMotorSpeeds(0.1, 0.005, 0);
   delay(4200);
 
@@ -174,21 +173,6 @@ void loop() {
   delay(600);  
 
   //exit sync space
-=======
-  setAllMotorSpeeds(0.1, 0, 0);
-  PidDelay(4200);
-
-  // Back
-  setAllMotorSpeeds(-0.1, 0, 0);
-  PidDelay(600);
-
-  // Forward
-  setAllMotorSpeeds(0.1, 0, 0);
-  PidDelay(900);
-
-  // Back
-  setAllMotorSpeeds(-0.1, 0, 0);
-  PidDelay(600);
  /*
   //Pause for arm - happens at 6300
   timer.waitUntil(6400);
@@ -207,7 +191,6 @@ void loop() {
   setAllMotorSpeeds(-0.1, 0, 0);
   timer.waitUntil(10400);
   
->>>>>>> adbd8c6 (PID implemented probably)
 
   // -- GO TO SPINNY THING --
   //Bump wall to square
@@ -554,7 +537,10 @@ void loop() {
 
 
   // -- STOP ALL MOTORS --
+  setAllMotorSpeeds(0, 0, 0);
+  while(true){
 
+  }
   // setAllMotorSpeeds(0.0, 0.5, 0.0); // Example: move sidewards at half speed
   // delay(5000);
 
