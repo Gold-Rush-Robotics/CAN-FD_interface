@@ -153,7 +153,7 @@ void loop() {
 
   //Pause for read
   setAllMotorSpeeds(0, 0, 0);
-  delay(1000);
+  delay(1500);
 
   // Back
   setAllMotorSpeeds(0.1, 0, 0);
@@ -171,18 +171,18 @@ void loop() {
   delay(1000);
 
   //rotate
-  setAllMotorSpeeds(0, 0, 0.1);
-  delay(1500);
+  setAllMotorSpeeds(0, 0, -0.25);
+  delay(2200);
 
   // This gets close to crater edge
-  // setAllMotorSpeeds(0, -0.1, 0);
-  // delay(3000);
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(1500);
 
-  // setAllMotorSpeeds(-0.1, 0, 0);
-  // delay(2000);
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(2000);
 
-  // setAllMotorSpeeds(0, -0.1, 0);
-  // delay(4500);
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(4500);
 
   //Stop
   setAllMotorSpeeds(0, 0, 0);

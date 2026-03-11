@@ -34,8 +34,11 @@ void loop() {
     // delay(100000);
 
     //Set start pose
+    Servos::moveArm(ArmPositions::READ_COLOR);
+    delay(200);
+
     Servos::moveArm(ArmPositions::COLLAPSED);
-    delay(6200);
+    delay(6000);
 
     Servos::moveArm(ArmPositions::READ_COLOR);
     delay(1000);
