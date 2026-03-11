@@ -35,9 +35,12 @@ void loop() {
 
 
     //Set start pose
-    Servos::move(3, BugPositions::COLLAPSED);
     Servos::moveArm(ArmPositions::READ_COLOR);
-    delay(1000);
+    delay(600);
+    Servos::move(3, BugPositions::HELLDIVE);
+    delay(200);
+    Servos::move(3, BugPositions::COLLAPSED);
+    delay(200);
     Servos::moveArm(ArmPositions::COLLAPSED);
 
     timer.waitUntil(6400);
@@ -55,9 +58,14 @@ void loop() {
     Servos::moveArm(ArmPositions::READ_COLOR);
     timer.waitUntil(45500);
     ColorSensor::readThenSetLED(1);
-    timer.waitUntil(47500);
-    Servos::moveArm(ArmPositions::COLLAPSED);
 
+    //at crater egde 
+    timer.waitUntil(53200);
+    Servos::move(3, BugPositions::HELLDIVE);
+    timer.waitUntil(53700);
+    Servos::move(3, BugPositions::COLLAPSED);
+    timer.waitUntil(54250);
+    Servos::moveArm(ArmPositions::COLLAPSED);
 
     //stop
     delay(10000000);

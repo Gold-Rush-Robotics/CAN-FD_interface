@@ -214,27 +214,56 @@ void loop() {
   delay(600);
 
   //rotate 180 + 45 to read
-  setAllMotorSpeeds(0, 0, 0.25);
+  setAllMotorSpeeds(0, 0, 0.2);
   delay(1800);
 
   //align with antenna
   timer.waitUntil(44500);
   setAllMotorSpeeds(0.05, 0.05, 0);
-  delay(750);
-  setAllMotorSpeeds(0, 0.1, 0);
-  delay(350);
+  delay(500);
+  setAllMotorSpeeds(0.065, 0.045, 0);
+  delay(500);
   setAllMotorSpeeds(0, 0, 0);
-  timer.waitUntil(47500);
+  timer.waitUntil(46500);
 
   //back off antenna
-  setAllMotorSpeeds(-0.05, -0.05, 0);
-  delay(600);
+  setAllMotorSpeeds(-0.025, -0.025, 0);
+  timer.waitUntil(48600);
+
+  //move left a small amount
+  setAllMotorSpeeds(-0.05, 0.01, 0);
+  timer.waitUntil(48800);
   setAllMotorSpeeds(0, 0, 0);
+
+  //---GO TO KEYPAD---
+  //Forward to wall and align with +X to the 
+  timer.waitUntil(50800);
+  setAllMotorSpeeds(0, 0.1, 0);
+  timer.waitUntil(52700);
+  setAllMotorSpeeds(0.05, 0, 0);
+
+  //move slightly to the -X to drop bugs
+  timer.waitUntil(52850);
+  setAllMotorSpeeds(-0.05, 0, 0);
+  timer.waitUntil(53150);
+  setAllMotorSpeeds(0, 0, 0);
+
+  //bash into the wall to localize X+ to wall and Y+ to the left 
+  timer.waitUntil(54200);
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(500);
+
+  //move to the keypad
+  setAllMotorSpeeds(0.02, 0.2, 0);
+  delay(3000);
+
+  //reverse to close wall
+  setAllMotorSpeeds(-0.05, 0, 0);
+  delay(750);
   
-  
-
-
-
+  //rotate -90 degrees
+  setAllMotorSpeeds(0, 0, -0.25);
+  delay(1800);
 
 
   //Stop
