@@ -127,42 +127,53 @@ void loop() {
 
   // -- PRESS BUTTON 3 TIMES AND GO BACK --
   // Forward
-  setAllMotorSpeeds(0.1, 0, 0);
+  setAllMotorSpeeds(0.1, 0.005, 0);
   delay(4200);
 
   // Back
-  setAllMotorSpeeds(-0.1, 0, 0);
+  setAllMotorSpeeds(-0.1, 0.05, 0);
   delay(600);
 
   // Forward
-  setAllMotorSpeeds(0.1, 0, 0);
+  setAllMotorSpeeds(0.1, 0.05, 0);
+  delay(800);
+
+  // Back
+  setAllMotorSpeeds(-0.1, 0.05, 0);
+  delay(600);
+  setAllMotorSpeeds(0, 0, 0);
+
+  // align with button antenna
+  timer.waitUntil(9000);
+  setAllMotorSpeeds(0.1, -0.06, 0.09);
   delay(900);
+  setAllMotorSpeeds(-0.05, 0, 0);
+  delay(200); 
+
+  //pause for read
+  setAllMotorSpeeds(0, 0, 0); //pause for read
+  delay(1000);
 
   // Back
   setAllMotorSpeeds(-0.1, 0, 0);
-  delay(600);
+  delay(600);  
 
-  //Pause for arm - happens at 6300
-  timer.waitUntil(6400);
-  setAllMotorSpeeds(0, 0, 0);
-
-  // Forward
-  timer.waitUntil(7400);
-  setAllMotorSpeeds(0.1, -0.04, 0);
-
-  //Pause for read
-  timer.waitUntil(8300);
-  setAllMotorSpeeds(0, 0, 0);
-
-  // Back
-  timer.waitUntil(9800);
-  setAllMotorSpeeds(-0.1, 0, 0);
-  timer.waitUntil(10400);
-  
+  //exit sync space
 
   // -- GO TO SPINNY THING --
+  //Bump wall to square
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(1200);
+
+  //Bump button to square
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(1000);
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(600);
+
+  //Drive Right to push duck
   setAllMotorSpeeds(0, -0.1, 0);
-  delay(2500);
+  delay(2700);
 
   setAllMotorSpeeds(0, 0.1, 0);
   delay(500);
@@ -172,19 +183,19 @@ void loop() {
 
   //rotate
   setAllMotorSpeeds(0, 0, -0.25);
-  delay(2200);
+  delay(2000);
 
   // This gets close to crater edge
   setAllMotorSpeeds(0.1, 0, 0);
-  delay(2000);
+  delay(2200);
 
-  //hit wall
+  //hit far wall 
   setAllMotorSpeeds(0, 0.1, 0);
-  delay(2500);
+  delay(2900);
 
-  //go to knob along wall
+  //go towards knob along wall
   setAllMotorSpeeds(0.1, 0.005, 0);
-  delay(5700);
+  delay(5800);
 
   //back up a bit
   setAllMotorSpeeds(-0.1, 0, 0);
@@ -198,72 +209,86 @@ void loop() {
 
   //move to far wall, right then forward
   setAllMotorSpeeds(0.05, 0.05, 0);
-  delay(3000);
+  delay(1500);
   setAllMotorSpeeds(0, 0.1, 0);
-  delay(800);
+  delay(1200);
   
 
   //run to knob
-  setAllMotorSpeeds(-0.1, 0.005, 0);
-  delay(1700);
+  setAllMotorSpeeds(-0.05, 0.005, 0);
+  delay(1400);
   setAllMotorSpeeds(-0.005, 0.005, 0);
   delay(5000);
 
   //back off knob
-  setAllMotorSpeeds(0.1, -0.1, 0);
-  delay(600);
+  setAllMotorSpeeds(0.05, -0.05, 0);
+  delay(900);
 
   //rotate 180 + 45 to read
   setAllMotorSpeeds(0, 0, 0.2);
-  delay(1800);
+  delay(1800 * 2);
+  setAllMotorSpeeds(0, 0, 0);
 
   //align with antenna
-  timer.waitUntil(44500);
-  setAllMotorSpeeds(0.05, 0.05, 0);
-  delay(500);
-  setAllMotorSpeeds(0.065, 0.045, 0);
-  delay(500);
+  timer.waitUntil(50000);
+  setAllMotorSpeeds(0.05, 0, 0);
+  delay(1100);
+  setAllMotorSpeeds(0, 0.05, 0);
+  delay(1200);
+  
+
+  //pause for read
   setAllMotorSpeeds(0, 0, 0);
-  timer.waitUntil(46500);
+  delay(2000);
 
   //back off antenna
-  setAllMotorSpeeds(-0.025, -0.025, 0);
-  timer.waitUntil(48600);
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(950);
 
-  //move left a small amount
-  setAllMotorSpeeds(-0.05, 0.01, 0);
-  timer.waitUntil(48800);
-  setAllMotorSpeeds(0, 0, 0);
-
-  //---GO TO KEYPAD---
-  //Forward to wall and align with +X to the 
-  timer.waitUntil(50800);
+  //align with crater
   setAllMotorSpeeds(0, 0.1, 0);
-  timer.waitUntil(52700);
-  setAllMotorSpeeds(0.05, 0, 0);
-
-  //move slightly to the -X to drop bugs
-  timer.waitUntil(52850);
-  setAllMotorSpeeds(-0.05, 0, 0);
-  timer.waitUntil(53150);
+  delay(1300);
   setAllMotorSpeeds(0, 0, 0);
 
-  //bash into the wall to localize X+ to wall and Y+ to the left 
-  timer.waitUntil(54200);
-  setAllMotorSpeeds(0.1, 0, 0);
-  delay(500);
+  //get here at ~57000, wait 5s for deploy
+  timer.waitUntil(57000 + 5000);
 
-  //move to the keypad
-  setAllMotorSpeeds(0.02, 0.2, 0);
+  //bump against long wall
+  setAllMotorSpeeds(0, 0.1, -0.1);
+  delay(2000);
+
+
+  // --- MOVE BACK TO START
+
+  //move back towards button along long wall
+  setAllMotorSpeeds(-0.1, 0.005, 0);
+  delay(4300);
+
+  //back off long wall, towards keypad
+  setAllMotorSpeeds(0, -0.1, 0);
+  delay(2000);
+  
+  //rotate 90 degrees
+  setAllMotorSpeeds(0, 0, 0.25);
+  delay(1800);
+
+  //go towards short wall
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(5000);
+
+  //back off wall
+  setAllMotorSpeeds(0, -0.1, 0);
+  delay(600);
+  
+  //rotate 90 degrees
+  setAllMotorSpeeds(0, 0, 0.25);
+  delay(1800);
+
+  //go into start square
+  setAllMotorSpeeds(0.04, 0.1, 0);
   delay(3000);
 
-  //reverse to close wall
-  setAllMotorSpeeds(-0.05, 0, 0);
-  delay(750);
-  
-  //rotate -90 degrees
-  setAllMotorSpeeds(0, 0, -0.25);
-  delay(1800);
+  //Perfectly Square
 
 
   //Stop

@@ -14,12 +14,12 @@ struct ArmPosition {
 // Predefined arm positions.
 namespace ArmPositions {
     const ArmPosition READ_COLOR = {43, 128};
-    const ArmPosition COLLAPSED = {0, 180};
+    const ArmPosition COLLAPSED = {10, 180};
 };
 
 namespace BugPositions {
     const int COLLAPSED = 180;
-    const int HELLDIVE = 60;
+    const int HELLDIVE = 30;
 }
 
 namespace Servos {
@@ -36,7 +36,7 @@ namespace Servos {
             return;
         }
 
-        controller.WritePosEx(id, pos, SPEED, ACCELERATION);
+        controller.WritePosEx(id, pos, SPEED * 1.25, ACCELERATION * 1.25);
     }
 
     void moveArm(ArmPosition pos) {

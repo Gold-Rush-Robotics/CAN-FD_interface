@@ -43,28 +43,31 @@ void loop() {
     delay(200);
     Servos::moveArm(ArmPositions::COLLAPSED);
 
-    timer.waitUntil(6400);
+
+    //in front of button antenna
+    timer.waitUntil(8000);
     Servos::moveArm(ArmPositions::READ_COLOR);
 
-    timer.waitUntil(8300);
+    delay(1300); //wait for drive forward
     ColorSensor::readThenSetLED(0);  
 
-    //back up
-    timer.waitUntil(10400);
+    delay(500); //wait for back up
     Servos::moveArm(ArmPositions::COLLAPSED);
 
+
+
     //at knob antenna
-    timer.waitUntil(44500);
+    timer.waitUntil(49000);
     Servos::moveArm(ArmPositions::READ_COLOR);
-    timer.waitUntil(45500);
+    timer.waitUntil(52000);
     ColorSensor::readThenSetLED(1);
 
     //at crater egde 
-    timer.waitUntil(53200);
+    timer.waitUntil(58000);
     Servos::move(3, BugPositions::HELLDIVE);
-    timer.waitUntil(53700);
+    delay(3000);
     Servos::move(3, BugPositions::COLLAPSED);
-    timer.waitUntil(54250);
+    delay(1000);
     Servos::moveArm(ArmPositions::COLLAPSED);
 
     //stop
