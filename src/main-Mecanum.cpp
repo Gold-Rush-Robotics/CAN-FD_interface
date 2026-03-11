@@ -216,7 +216,7 @@ void loop() {
 
   //run to knob
   setAllMotorSpeeds(-0.05, 0.005, 0);
-  delay(1400);
+  delay(1700);
   setAllMotorSpeeds(-0.005, 0.005, 0);
   delay(5000);
 
@@ -235,6 +235,8 @@ void loop() {
   delay(1100);
   setAllMotorSpeeds(0, 0.05, 0);
   delay(1200);
+  setAllMotorSpeeds(0.05, 0, 0);
+  delay(300);
   
 
   //pause for read
@@ -262,7 +264,7 @@ void loop() {
 
   //move back towards button along long wall
   setAllMotorSpeeds(-0.1, 0.005, 0);
-  delay(4300);
+  delay(4000);
 
   //back off long wall, towards keypad
   setAllMotorSpeeds(0, -0.1, 0);
@@ -274,7 +276,7 @@ void loop() {
 
   //go towards short wall
   setAllMotorSpeeds(0, 0.1, 0);
-  delay(5000);
+  delay(5500);
 
   //back off wall
   setAllMotorSpeeds(0, -0.1, 0);
@@ -287,8 +289,90 @@ void loop() {
   //go into start square
   setAllMotorSpeeds(0.04, 0.1, 0);
   delay(3000);
-
   //Perfectly Square
+  
+
+  
+
+  // --- PUSH DUCK #2
+
+  //bump keypad antenna
+  setAllMotorSpeeds(-0.1, 0.005, 0);
+  delay(3500);
+  setAllMotorSpeeds(-0.05, 0, 0);
+  delay(1000);
+
+  //push duck and return 
+  setAllMotorSpeeds(0, -0.1, 0);
+  delay(3500);
+  setAllMotorSpeeds(0.05, 0.05, 0);
+  delay(9000);
+
+  // --- END OF PUSH DUCK #2
+
+
+
+  // --- KEYPAD SOLENOIDS
+
+  //back out and rotate -90
+  setAllMotorSpeeds(-0.05, -0.05, 0);
+  delay(1000);
+  setAllMotorSpeeds(0, 0, -0.25);
+  delay(1800);
+
+  //bump short wall
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(600);
+
+  //bump long wall
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(700);
+
+  //back out and rotate -90
+  setAllMotorSpeeds(0.05, -0.05, 0);
+  delay(1000);
+  setAllMotorSpeeds(0, 0, -0.25);
+  delay(1800);
+
+  //bump solenoids and back off a smidge
+  setAllMotorSpeeds(0, -0.05, 0);
+  delay(1500);
+  setAllMotorSpeeds(0, 0.05, 0);
+  delay(100);
+
+  //bump keypad
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(3000);
+  setAllMotorSpeeds(0.05, 0, 0); //slow down
+  delay(1500);
+
+  //bump solenoids again
+  setAllMotorSpeeds(0, -0.05, 0);
+  delay(600);
+
+  //back off keypad
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(300);
+
+  //back off wall
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(1200);
+
+  //align with keypad
+  setAllMotorSpeeds(0.05, 0, 0); //drive over
+  delay(2000);
+  setAllMotorSpeeds(0.05, -0.02, 0); //drive up to keys
+  delay(1500);
+  setAllMotorSpeeds(0, -0.05, 0); //provide force into it
+  delay(200);
+
+
+
+
+
+
+
+
 
 
   //Stop

@@ -1,5 +1,5 @@
 #include <Arduino.h>
-
+#include <timer.h>
 /*
 About: Made for the 2026 IEEE Competition keypad task. 
 To accomplish this task, solenoids are used to enter the code 73738# (RESET#)
@@ -17,7 +17,7 @@ int delayAfterLow = 400;
 int soleArr[6] = {solenoid7, solenoid3, solenoid7, solenoid3, solenoid8, solenoidPound};
 int startDelay = 44000;
 int repeatDelay = 500;
-int repeatCount = 10;
+int repeatCount = 20;
 
 void setup() {
   // Pins set as output:
@@ -45,7 +45,9 @@ void funcInputter(int num)
 
 void loop() {
   // Prototype Optimization 2
+  Timer timer = Timer();
 
+  timer.waitUntil(90000);
   for (int i = 0; i < repeatCount; i++)
   {
     for (int i = 0; i<6; i++)
@@ -56,5 +58,8 @@ void loop() {
     delay(repeatDelay);
   }
 
-  while (true);
+
+
+  //stop
+  delay(10000000);
 }
