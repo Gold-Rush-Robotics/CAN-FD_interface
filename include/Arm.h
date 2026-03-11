@@ -18,8 +18,8 @@ namespace ArmPositions {
 };
 
 namespace BugPositions {
-    const int COLLAPSED = 0;
-    const int HELLDIVE = 120;
+    const int COLLAPSED = 180;
+    const int HELLDIVE = 60;
 }
 
 namespace Servos {

@@ -1,6 +1,7 @@
 #include <ColorSensor.h>
 #include <LED.h>
 #include <Arm.h>
+#include <timer.h>
 
 
 #define ServoSerialPort Serial1
@@ -29,26 +30,32 @@ void setup() {
 }
 
 void loop() {
+    Timer timer = Timer();
     // testAllLeds();
-    // Servos::moveArm(ArmPositions::READ_COLOR);
-    // delay(100000);
+
 
     //Set start pose
+    Servos::move(3, BugPositions::COLLAPSED);
     Servos::moveArm(ArmPositions::READ_COLOR);
-    delay(200);
-
+    delay(1000);
     Servos::moveArm(ArmPositions::COLLAPSED);
-    delay(6000);
 
+    timer.waitUntil(6400);
     Servos::moveArm(ArmPositions::READ_COLOR);
-    delay(1000);
-    delay(900);
-    delay(1000);
+
+    timer.waitUntil(8300);
     ColorSensor::readThenSetLED(0);  
-    delay(1000);    
 
     //back up
-    delay(600);
+    timer.waitUntil(10400);
+    Servos::moveArm(ArmPositions::COLLAPSED);
+
+    //at knob antenna
+    timer.waitUntil(44500);
+    Servos::moveArm(ArmPositions::READ_COLOR);
+    timer.waitUntil(45500);
+    ColorSensor::readThenSetLED(1);
+    timer.waitUntil(47500);
     Servos::moveArm(ArmPositions::COLLAPSED);
 
 

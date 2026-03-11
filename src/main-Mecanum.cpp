@@ -2,6 +2,7 @@
 #include "can_interface.h"
 #include "motor_controller.h"
 #include "mecanum_controller.h"
+#include <timer.h>
 
 #define DIR1 4
 #define PWM1 3
@@ -53,7 +54,7 @@ MecanumController mecanum(0.15, 0.14, 0.075); // Example wheelbase and trackwidt
 CANInterface canInterface;
 
 void setAllMotorSpeeds(float linear_x, float linear_y, float angular_z) {
-  float* wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(linear_x, linear_y, angular_z);
+  float* wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-linear_x, linear_y, angular_z);
   Serial.print("Wheel speeds: ");
   for (int i = 0; i < 4; i++) {
     Serial.print(wheelSpeeds[i]);
@@ -103,10 +104,8 @@ void setup() {
 }
 
 void loop() {
-  static unsigned long loopCount = 0;
-  loopCount++;
-  // Serial.print("Loop iteration: ");
-  // Serial.println(loopCount);
+  Timer timer = Timer();
+
 
   digitalWrite(LED_PIN, HIGH);
   delay(50);
@@ -128,36 +127,37 @@ void loop() {
 
   // -- PRESS BUTTON 3 TIMES AND GO BACK --
   // Forward
-  setAllMotorSpeeds(-0.1, 0, 0);
-  delay(4100);
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(4200);
 
   // Back
-  setAllMotorSpeeds(0.1, 0, 0);
+  setAllMotorSpeeds(-0.1, 0, 0);
   delay(600);
 
   // Forward
-  setAllMotorSpeeds(-0.1, 0, 0);
+  setAllMotorSpeeds(0.1, 0, 0);
   delay(900);
 
   // Back
-  setAllMotorSpeeds(0.1, 0, 0);
+  setAllMotorSpeeds(-0.1, 0, 0);
   delay(600);
 
-  //Pause for arm
+  //Pause for arm - happens at 6300
+  timer.waitUntil(6400);
   setAllMotorSpeeds(0, 0, 0);
-  delay(1000);
 
   // Forward
-  setAllMotorSpeeds(-0.1, -0.04, 0);
-  delay(900);
+  timer.waitUntil(7400);
+  setAllMotorSpeeds(0.1, -0.04, 0);
 
   //Pause for read
+  timer.waitUntil(8300);
   setAllMotorSpeeds(0, 0, 0);
-  delay(1500);
 
   // Back
-  setAllMotorSpeeds(0.1, 0, 0);
-  delay(600);
+  timer.waitUntil(9800);
+  setAllMotorSpeeds(-0.1, 0, 0);
+  timer.waitUntil(10400);
   
 
   // -- GO TO SPINNY THING --
@@ -167,7 +167,7 @@ void loop() {
   setAllMotorSpeeds(0, 0.1, 0);
   delay(500);
 
-  setAllMotorSpeeds(0.1, 0, 0);
+  setAllMotorSpeeds(-0.1, 0, 0);
   delay(1000);
 
   //rotate
@@ -175,14 +175,67 @@ void loop() {
   delay(2200);
 
   // This gets close to crater edge
-  setAllMotorSpeeds(-0.1, 0, 0);
-  delay(1500);
-
-  setAllMotorSpeeds(0, 0.1, 0);
+  setAllMotorSpeeds(0.1, 0, 0);
   delay(2000);
 
+  //hit wall
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(2500);
+
+  //go to knob along wall
+  setAllMotorSpeeds(0.1, 0.005, 0);
+  delay(5700);
+
+  //back up a bit
   setAllMotorSpeeds(-0.1, 0, 0);
-  delay(4500);
+  delay(400);
+  setAllMotorSpeeds(0, -0.1, 0);
+  delay(800);
+
+  //rotate -90 degrees
+  setAllMotorSpeeds(0, 0, -0.25);
+  delay(1800);
+
+  //move to far wall, right then forward
+  setAllMotorSpeeds(0.05, 0.05, 0);
+  delay(3000);
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(800);
+  
+
+  //run to knob
+  setAllMotorSpeeds(-0.1, 0.005, 0);
+  delay(1700);
+  setAllMotorSpeeds(-0.005, 0.005, 0);
+  delay(5000);
+
+  //back off knob
+  setAllMotorSpeeds(0.1, -0.1, 0);
+  delay(600);
+
+  //rotate 180 + 45 to read
+  setAllMotorSpeeds(0, 0, 0.25);
+  delay(1800);
+
+  //align with antenna
+  timer.waitUntil(44500);
+  setAllMotorSpeeds(0.05, 0.05, 0);
+  delay(750);
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(350);
+  setAllMotorSpeeds(0, 0, 0);
+  timer.waitUntil(47500);
+
+  //back off antenna
+  setAllMotorSpeeds(-0.05, -0.05, 0);
+  delay(600);
+  setAllMotorSpeeds(0, 0, 0);
+  
+  
+
+
+
+
 
   //Stop
   setAllMotorSpeeds(0, 0, 0);
