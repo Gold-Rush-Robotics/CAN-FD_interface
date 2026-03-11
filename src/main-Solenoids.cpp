@@ -47,7 +47,7 @@ void loop() {
   // Prototype Optimization 2
   Timer timer = Timer();
 
-  timer.waitUntil(90000);
+  timer.waitUntil(80000);
   for (int i = 0; i < repeatCount; i++)
   {
     for (int i = 0; i<6; i++)

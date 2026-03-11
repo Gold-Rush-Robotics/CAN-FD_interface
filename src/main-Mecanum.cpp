@@ -338,7 +338,7 @@ void loop() {
   setAllMotorSpeeds(0, -0.05, 0);
   delay(1500);
   setAllMotorSpeeds(0, 0.05, 0);
-  delay(100);
+  delay(300);
 
   //bump keypad
   setAllMotorSpeeds(0.1, 0, 0);
