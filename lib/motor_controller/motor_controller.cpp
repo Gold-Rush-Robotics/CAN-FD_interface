@@ -1,8 +1,12 @@
 #include <motor_controller.h>
 
-MotorController::MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin, int starting_direction)
+MotorController::MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin, int starting_direction, double Kp, double Ki, double Kd)
     : _dirPin(dirPin), _pwmPin(pwmPin), _slpPin(slpPin), _fltPin(fltPin), _encA(encA), _encB(encB), _csPin(csPin), starting_direction(starting_direction) {
   _encoder = new Encoder(_encA, _encB);
+
+  _pid = new PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+  _pid->SetMode(AUTOMATIC);
+  _pid->SetOutputLimits(-255,255);
   if (!_encoder) {
     Serial.println("ERROR: Failed to allocate Encoder");
   }
@@ -30,7 +34,13 @@ void MotorController::setSpeed(int pwmVal) {
 }
 
 void MotorController::setSpeedRPM(float rpm) {
+  Setpoint = double(rpm);
   int pwm = map(rpm, -100, 100, -255, 255);
+  setSpeed(pwm);
+}
+
+void MotorController::PidSetSpeedRPM(float rpm) {
+  int pwm = map((int)rpm, -100, 100, -255, 255);
   setSpeed(pwm);
 }
 
@@ -49,6 +59,12 @@ float MotorController::getRPM() {
   _lastEncoderCount = encCount;
   _lastTime = now;
   return rpm;
+}
+
+void MotorController::PidLoop() {
+  Input = (double)getRPM();
+  _pid->Compute();
+  setSpeed((int)Output);
 }
 
 int MotorController::getFaultPin() {

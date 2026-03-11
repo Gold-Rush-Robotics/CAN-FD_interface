@@ -3,6 +3,7 @@
 #include "motor_controller.h"
 #include "mecanum_controller.h"
 #include <timer.h>
+#include <TimeLib.h>
 
 #define DIR1 4
 #define PWM1 3
@@ -40,15 +41,28 @@
 #define DISABLE_CAN 1
 #define LED_PIN 13
 
+double Kp = 2;
+double Ki = 5;
+double Kd = 1;
+
 // Motor controllers
-MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1);
-MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1);
-MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3); // Reverse direction for rear motors
-MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1); // Reverse direction for rear motors
+MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1, Kp, Ki, Kd);
+MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1, Kp, Ki, Kd);
+MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, 1, Kp, Ki, Kd); // Reverse direction for rear motors
+MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1, Kp, Ki, Kd); // Reverse direction for rear motors
 
 MotorController* motors[4] = {&motor1, &motor2, &motor3, &motor4};
 
 MecanumController mecanum(0.15, 0.14, 0.075); // Example wheelbase and trackwidth in meters
+
+void PidDelay(int ms) {
+  unsigned long startTime = millis();
+  while(millis() < startTime + ms) {
+    for(int i = 0; i < 4; i++) {
+      motors[i]->PidLoop();
+    }
+  }
+}
 
 // CAN interface
 CANInterface canInterface;
@@ -58,7 +72,7 @@ void setAllMotorSpeeds(float linear_x, float linear_y, float angular_z) {
   Serial.print("Wheel speeds: ");
   for (int i = 0; i < 4; i++) {
     Serial.print(wheelSpeeds[i]);
-    motors[i]->setSpeedRPM(wheelSpeeds[i] * 30.0/1.6);
+    motors[i]->setSetpoint(wheelSpeeds[i] * 30.0/1.6);
 
     Serial.print(" ");
   }
@@ -127,6 +141,7 @@ void loop() {
 
   // -- PRESS BUTTON 3 TIMES AND GO BACK --
   // Forward
+<<<<<<< HEAD
   setAllMotorSpeeds(0.1, 0.005, 0);
   delay(4200);
 
@@ -159,6 +174,40 @@ void loop() {
   delay(600);  
 
   //exit sync space
+=======
+  setAllMotorSpeeds(0.1, 0, 0);
+  PidDelay(4200);
+
+  // Back
+  setAllMotorSpeeds(-0.1, 0, 0);
+  PidDelay(600);
+
+  // Forward
+  setAllMotorSpeeds(0.1, 0, 0);
+  PidDelay(900);
+
+  // Back
+  setAllMotorSpeeds(-0.1, 0, 0);
+  PidDelay(600);
+ /*
+  //Pause for arm - happens at 6300
+  timer.waitUntil(6400);
+  setAllMotorSpeeds(0, 0, 0);
+
+  // Forward
+  timer.waitUntil(7400);
+  setAllMotorSpeeds(0.1, -0.04, 0);
+
+  //Pause for read
+  timer.waitUntil(8300);
+  setAllMotorSpeeds(0, 0, 0);
+
+  // Back
+  timer.waitUntil(9800);
+  setAllMotorSpeeds(-0.1, 0, 0);
+  timer.waitUntil(10400);
+  
+>>>>>>> adbd8c6 (PID implemented probably)
 
   // -- GO TO SPINNY THING --
   //Bump wall to square
@@ -501,12 +550,10 @@ void loop() {
 
   */
 
+  
+
 
   // -- STOP ALL MOTORS --
-  setAllMotorSpeeds(0, 0, 0);
-  while (true) {
-    
-  }
 
   // setAllMotorSpeeds(0.0, 0.5, 0.0); // Example: move sidewards at half speed
   // delay(5000);
