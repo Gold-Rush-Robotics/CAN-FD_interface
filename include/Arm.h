@@ -12,9 +12,19 @@ struct ArmPosition {
 };
 
 // Predefined arm positions.
+const ArmPosition _ARM_POSITIONS[] = {
+    {43, 128},
+    {10, 180},
+    {173, 128},
+    {173, 50},
+};
+// Indices for the predefined arm positions. This lets the teensies communicate
+// an arm position over serial.
 namespace ArmPositions {
-    const ArmPosition READ_COLOR = {43, 128};
-    const ArmPosition COLLAPSED = {10, 180};
+    const uint8_t READ_COLOR = 0;
+    const uint8_t COLLAPSED = 1;
+    const uint8_t DOWN = 2;
+    const uint8_t KNOCK_DUCK = 3;
 };
 
 namespace BugPositions {
@@ -32,14 +42,20 @@ namespace Servos {
             pos < 0 ||
             pos > 2000
         ) {
-            Serial.println("Ignoring moveArm command; servos can only move between 0 and 2000.");
+            Serial.println("Ignoring move command; servos can only move between 0 and 2000.");
             return;
         }
 
         controller.WritePosEx(id, pos, SPEED * 1.25, ACCELERATION * 1.25);
     }
 
-    void moveArm(ArmPosition pos) {
+    void moveArm(uint8_t pos_idx) {
+        if (pos_idx >= std::size(_ARM_POSITIONS)) {
+            Serial.println("ERROR: Tried to move to nonexistant arm position");
+            return;
+        }
+
+        ArmPosition pos = _ARM_POSITIONS[pos_idx];
         move(1, pos.servo1);
         move(2, pos.servo2);
         

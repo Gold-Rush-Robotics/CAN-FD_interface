@@ -30,7 +30,7 @@ void setup() {
   // Solenoid sequence runs:
   // Code: 73738# (RESET#)
 
-  delay(startDelay);
+  // delay(startDelay);
 
   
 }
@@ -47,7 +47,8 @@ void loop() {
   // Prototype Optimization 2
   Timer timer = Timer();
 
-  timer.waitUntil(80000);
+  timer.waitUntil(20000);
+  // timer.waitUntil(80000);
   for (int i = 0; i < repeatCount; i++)
   {
     for (int i = 0; i<6; i++)
