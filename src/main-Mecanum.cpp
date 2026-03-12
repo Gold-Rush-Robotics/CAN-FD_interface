@@ -138,7 +138,7 @@ void loop() {
     Serial.println("WARNING: Motor4 fault detected");
   }
 
-
+  /*
   // === PRESS THE BIG RED BUTTON ===
 
   // Forward
@@ -160,6 +160,10 @@ void loop() {
   SerialAtomics::send(Message::MoveArm);
   SerialAtomics::send(ArmPositions::READ_COLOR);
   delay(1000);
+
+  // tad bit forward
+  setAllMotorSpeeds(0.05, 0, 0);
+  delay(500);
 
   // pause for read
   SerialAtomics::send(Message::ReadThenSetLED);
@@ -219,23 +223,23 @@ void loop() {
 
   //run to knob
   setAllMotorSpeeds(-0.05, 0.005, 0);
-  delay(1700);
-  setAllMotorSpeeds(-0.005, 0.005, 0);
+  delay(2000);
+  setAllMotorSpeeds(-0.01, 0.01, 0);
   delay(5000);
 
   //back off knob
   setAllMotorSpeeds(0.05, -0.05, 0);
   delay(1000);
 
-  //rotate 180 to read
+  //rotate little less than 180 to read
   setAllMotorSpeeds(0, 0, 0.25);
-  delay(3400);
+  delay(3200);
 
   // move arm into reading pos & get closer
   SerialAtomics::send(Message::MoveArm);
   SerialAtomics::send(ArmPositions::READ_COLOR);
-  setAllMotorSpeeds(.05, 0, 0);
-  delay(1000);
+  setAllMotorSpeeds(0.05, 0, 0);
+  delay(1300);
 
   // align w/ antenna
   setAllMotorSpeeds(0, -0.05, 0);
@@ -249,7 +253,7 @@ void loop() {
 
   //back off antenna
   setAllMotorSpeeds(-0.1, .05, 0);
-  delay(950);
+  delay(900);
 
 
   // === HELLDIVERS ===
@@ -260,12 +264,12 @@ void loop() {
   delay(800);
 
   // slam into wall behind spinny thing antenna
-  setAllMotorSpeeds(0.15, 0, 0);
+  setAllMotorSpeeds(0.15, 0.05, 0);
   delay(2000);
 
   // move left to where helldivers should be deployed
-  setAllMotorSpeeds(0, 0.1, 0);
-  delay(800);
+  setAllMotorSpeeds(0.02, 0.1, 0);
+  delay(600);
 
   // DEPLOY THE HELLDIVERS
   SerialAtomics::send(Message::MoveBugs);
@@ -276,140 +280,79 @@ void loop() {
   delay(1000);
   SerialAtomics::send(Message::MoveArm);
   SerialAtomics::send(ArmPositions::COLLAPSED);
-  delay(1000);
+  delay(2700);
 
-  while (true) {}
+  // back off wall after deploying HELLDIVERS
+  setAllMotorSpeeds(-0.15, 0, 0);
+  delay(1500);
 
-
-  // === BACK TO START ===
-
-
-  //move back towards button along long wall
-  setAllMotorSpeeds(-0.1, 0.005, 0);
-  delay(4000);
-
-  //back off long wall, towards keypad
-  setAllMotorSpeeds(0, -0.1, 0);
-  delay(2000);
-  
   //rotate 90 degrees
   setAllMotorSpeeds(0, 0, 0.25);
   delay(1800);
 
-  //go towards short wall
-  setAllMotorSpeeds(0, 0.1, 0);
-  delay(5500);
+  // go to start corner
+  setAllMotorSpeeds(0.1, 0.01, 0);
+  delay(2800);
+  setAllMotorSpeeds(0.01, 0.1, 0);
+  delay(2800);
+  */
 
-  //back off wall
-  setAllMotorSpeeds(0, -0.1, 0);
-  delay(600);
-  
-  //rotate 90 degrees
-  setAllMotorSpeeds(0, 0, 0.25);
-  delay(1800);
-
-  //go into start square
-  setAllMotorSpeeds(0.04, 0.1, 0);
-  delay(3000);
-  //Perfectly Square
-  
-
-  // === SCORE SECOND DUCK ===
-
-
-  //bump keypad antenna
-  setAllMotorSpeeds(-0.1, 0.005, 0);
-  delay(3500);
-  setAllMotorSpeeds(-0.05, 0, 0);
-  delay(1000);
-
-  //push duck and return 
-  setAllMotorSpeeds(0, -0.1, 0);
-  delay(3500);
   setAllMotorSpeeds(0.05, 0.05, 0);
-  delay(9000);
+  delay(300);
 
+  // go towards keypad antenna
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(3000);
 
-  // === KEYPAD ===
+  // go towards keypad antenna (slower)
+  setAllMotorSpeeds(-0.05, 0, 0);
+  delay(1700);
 
+  // back off a bit
+  setAllMotorSpeeds(0.05, 0, 0);
+  delay(500);
 
-  //back out and rotate -90
-  setAllMotorSpeeds(-0.05, -0.05, 0);
-  delay(1000);
-  setAllMotorSpeeds(0, 0, -0.25);
-  delay(1800);
-
-  //bump short wall
+  // align against wall
   setAllMotorSpeeds(0, 0.1, 0);
+  delay(300);
+
+  // push keypad antenna duck into blue square
+  setAllMotorSpeeds(0, -0.1, 0);
+  delay(2200);
+
+  // diagonal to blue square
+  setAllMotorSpeeds(-0.1, -0.1, 0);
+  delay(800);
+
+  // reverse diagonal to get out of blue square
+  setAllMotorSpeeds(0.1, 0.1, 0);
   delay(600);
 
-  //bump long wall
-  setAllMotorSpeeds(-0.1, 0, 0);
+  // go towards keypad antenna
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(500);
+
+  //rotate 180 degrees
+  setAllMotorSpeeds(0, 0, 0.25);
+  delay(3400);
+
+  // align x to keypad
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(1400);
+
+  // go to keypad
+  setAllMotorSpeeds(0, -0.1, 0);
   delay(700);
 
-  //back out and rotate -90
-  setAllMotorSpeeds(0.05, -0.05, 0);
-  delay(1000);
-  setAllMotorSpeeds(0, 0, -0.25);
-  delay(1800);
+  // diagonal to keypad
+  setAllMotorSpeeds(0.035, -0.02, 0);
+  delay(1400);
 
-  //bump solenoids and back off a smidge
-  setAllMotorSpeeds(0, -0.05, 0);
-  delay(1500);
-  setAllMotorSpeeds(0, 0.05, 0);
-  delay(300);
-
-  //bump keypad
-  setAllMotorSpeeds(0.1, 0, 0);
-  delay(3000);
-  setAllMotorSpeeds(0.05, 0, 0); //slow down
-  delay(1500);
-
-  //bump solenoids again
-  setAllMotorSpeeds(0, -0.05, 0);
+  // drive into keypad to ensure good contact
+  setAllMotorSpeeds(0.01, -0.03, 0);
   delay(600);
 
-  //back off keypad
-  setAllMotorSpeeds(-0.1, 0, 0);
-  delay(300);
-
-  //back off wall
-  setAllMotorSpeeds(0, 0.1, 0);
-  delay(1200);
-
-  //align with keypad
-  setAllMotorSpeeds(0.05, 0, 0); //drive over
-  delay(2000);
-  setAllMotorSpeeds(0.05, -0.02, 0); //drive up to keys
-  delay(1500);
-  setAllMotorSpeeds(0, -0.05, 0); //provide force into it
-  delay(200);
-
-  // wait for a few keypad attempts
-  delay(5000);
-
-  // back off wall
-  setAllMotorSpeeds(0, 0.1, 0);
-  delay(1000);
-
-  
-  // === DA BOWL ===
-  
-
-  // knock duck off middle station
-  SerialAtomics::send(Message::MoveArm);
-  SerialAtomics::send(ArmPositions::READ_COLOR);
-  delay(500);
-  SerialAtomics::send(Message::MoveArm);
-  SerialAtomics::send(ArmPositions::DOWN);
-  delay(500);
-  SerialAtomics::send(Message::MoveArm);
-  SerialAtomics::send(ArmPositions::KNOCK_DUCK);
-  delay(500);
-
-  // drive forwards to make sure we knock duck off
-  setAllMotorSpeeds(0.05, 0, 0);
-  delay(1000);
+  // -- TODO --: Knock off middle duck and read antenna then read keypad antenna
 
   // -- STOP ALL MOTORS --
   setAllMotorSpeeds(0, 0, 0);
