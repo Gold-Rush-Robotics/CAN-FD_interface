@@ -3,6 +3,9 @@
 #include "motor_controller.h"
 #include "mecanum_controller.h"
 #include <timer.h>
+#include <TimeLib.h>
+#include <SerialAtomics.h>
+#include <Arm.h>
 
 #define DIR1 4
 #define PWM1 3
@@ -67,6 +70,8 @@ void setAllMotorSpeeds(float linear_x, float linear_y, float angular_z) {
 
 void setup() {
   Serial.begin(115200);
+  SerialAtomics::setup();
+
   while (!Serial && millis() < 2000);
   Serial.println("===================================");
   Serial.print("Node Role: ");
@@ -101,6 +106,16 @@ void setup() {
 
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
+
+  SerialAtomics::send(Message::Ping);
+  Message msg = SerialAtomics::recvMsg();
+  if (msg != Message::Pong) {
+    Serial.println("ERROR: Didn't recieve `Pong` from arm teensy");
+  }
+  Message msg = SerialAtomics::recvMsg();
+  if (msg != Message::StartGame) {
+    Serial.println("ERROR: Didn't receive `StartGame` from arm teensy");
+  }
 }
 
 void loop() {
@@ -144,17 +159,22 @@ void loop() {
   setAllMotorSpeeds(0, 0, 0);
 
   // align with button antenna
-  timer.waitUntil(9000);
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::READ_COLOR);
   setAllMotorSpeeds(0.1, -0.06, 0.09);
   delay(900);
   setAllMotorSpeeds(-0.05, 0, 0);
   delay(200); 
 
-  //pause for read
-  setAllMotorSpeeds(0, 0, 0); //pause for read
+  // pause for read
+  SerialAtomics::send(Message::ReadThenSetLED);
+  SerialAtomics::send(0);
+  setAllMotorSpeeds(0, 0, 0);
   delay(1000);
 
   // Back
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::COLLAPSED);
   setAllMotorSpeeds(-0.1, 0, 0);
   delay(600);  
 
@@ -230,7 +250,8 @@ void loop() {
   setAllMotorSpeeds(0, 0, 0);
 
   //align with antenna
-  timer.waitUntil(50000);
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::READ_COLOR);
   setAllMotorSpeeds(0.05, 0, 0);
   delay(1100);
   setAllMotorSpeeds(0, 0.05, 0);
@@ -240,6 +261,8 @@ void loop() {
   
 
   //pause for read
+  SerialAtomics::send(Message::ReadThenSetLED);
+  SerialAtomics::send(1);
   setAllMotorSpeeds(0, 0, 0);
   delay(2000);
 
@@ -252,8 +275,14 @@ void loop() {
   delay(1300);
   setAllMotorSpeeds(0, 0, 0);
 
-  //get here at ~57000, wait 5s for deploy
-  timer.waitUntil(57000 + 5000);
+  // DEPLOY THE HELLDIVERS
+  SerialAtomics::send(Message::MoveBugs);
+  SerialAtomics::send(BugPositions::HELLDIVE);
+  delay(3000);
+  SerialAtomics::send(Message::MoveBugs);
+  SerialAtomics::send(BugPositions::COLLAPSED);
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::COLLAPSED);
 
   //bump against long wall
   setAllMotorSpeeds(0, 0.1, -0.1);

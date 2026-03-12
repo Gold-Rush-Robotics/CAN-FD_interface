@@ -64,6 +64,12 @@ namespace ColorSensor {
         Serial.println(")");
     }
 
+    uint16_t readLux() {
+        float r, g, b;
+        sensor.getRGB(&r, &g, &b);
+        return sensor.calculateLux(r, g, b);
+    }
+
     void readThenSetLED(size_t led) {
         float r, g, b;
         sensor.getRGB(&r, &g, &b);
