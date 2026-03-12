@@ -64,20 +64,26 @@ namespace ColorSensor {
         Serial.println(")");
     }
 
+    uint16_t readLux() {
+        float r, g, b;
+        sensor.getRGB(&r, &g, &b);
+        return sensor.calculateLux(r, g, b);
+    }
+
     void readThenSetLED(size_t led) {
         float r, g, b;
         sensor.getRGB(&r, &g, &b);
         Color read1 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
-        delay(100);
+        delay(10);
         sensor.getRGB(&r, &g, &b);
         Color read2 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
-        delay(100);
+        delay(10);
         sensor.getRGB(&r, &g, &b);
         Color read3 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
-        delay(100);
+        delay(10);
         sensor.getRGB(&r, &g, &b);
         Color read4 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
-        delay(100);
+        delay(10);
         sensor.getRGB(&r, &g, &b);
         Color read5 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
         uint8_t red = (read1.r + read2.r + read3.r + read4.r + read5.r)/5;
