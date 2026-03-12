@@ -1,13 +1,13 @@
 #include <motor_controller.h>
 #include <cmath>
 
-MotorController::MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin, int starting_direction, double Kp, double Ki, double Kd)
+MotorController::MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin, int starting_direction, double Kp, double Ki, double Kd, double POn)
     : _dirPin(dirPin), _pwmPin(pwmPin), _slpPin(slpPin), _fltPin(fltPin), _encA(encA), _encB(encB), _csPin(csPin), starting_direction(starting_direction) {
   _encoder = new Encoder(_encA, _encB);
 
-  _pid = new PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, REVERSE);
+  _pid = new PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, POn, DIRECT);
   _pid->SetMode(AUTOMATIC);
-  _pid->SetOutputLimits(-255,255);
+  _pid->SetOutputLimits(50,-50);
   if (!_encoder) {
     Serial.println("ERROR: Failed to allocate Encoder");
   }
@@ -35,13 +35,13 @@ void MotorController::setSpeed(int pwmVal) {
 }
 
 void MotorController::setSpeedRPM(float rpm) {
-  Setpoint = double(rpm);
-  int pwm = map(rpm, -100, 100, -255, 255);
+  Setpoint = (double)rpm;
+  int pwm = map((int)rpm, 100, -100, 255, -255);
   setSpeed(pwm);
 }
 
 void MotorController::PidSetSpeedRPM(float rpm) {
-  int pwm = map((int)rpm, -100, 100, -255, 255);
+  int pwm = map((int)rpm, 100, -100, 255, -255);
   setSpeed(pwm);
 }
 
@@ -52,14 +52,19 @@ float MotorController::getRPM() {
     return 0.0f;
   }
   unsigned long now = millis();
-  long encCount = _encoder->read();
-  long delta = encCount - _lastEncoderCount;
-  float revs = delta / (float)(_ticksPerRev * _gearRatio);
-  float dt = (now - _lastTime) / 60000.0;
-  float rpm = (dt > 0) ? (revs / dt) : 0;
-  _lastEncoderCount = encCount;
-  _lastTime = now;
-  return rpm;
+  float timeElapsed = (now - _lastTime);
+  if (timeElapsed > 50) {
+      long encCount = _encoder->read();
+      long delta = (encCount - _lastEncoderCount) * -1;
+
+      float revs = delta / (float)(_ticksPerRev * _gearRatio);
+      float dt = timeElapsed / 60000.0;
+      float rpm = revs / dt;
+      _lastEncoderCount = encCount;
+      _lastTime = now;
+      _lastRPM = rpm;
+  }
+  return _lastRPM;
 }
 
 void MotorController::PidLoop() {

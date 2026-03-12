@@ -7,7 +7,7 @@
 
 class MotorController {
 public:
-  MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin, int starting_direction = 1, double Kp = 2, double Ki = 5, double Kd = 1);
+  MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin, int starting_direction = 1, double Kp = 2, double Ki = 5, double Kd = 1, double POn = 1);
   bool begin();
   void setSpeed(int pwmVal);
   void setSetpoint(double targetRPM) { Setpoint = targetRPM; }
@@ -26,6 +26,7 @@ private:
   PID* _pid;
   long _lastEncoderCount = 0;
   unsigned long _lastTime = 0;
+  unsigned long _lastRPM = 0;
   const int _ticksPerRev = 1920; // Adjust as needed
   const float _gearRatio = 1.0; // Adjust as needed
   int starting_direction = 1; // 1 for forward, -1 for reverse

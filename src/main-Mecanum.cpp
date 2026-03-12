@@ -41,15 +41,16 @@
 #define DISABLE_CAN 1
 #define LED_PIN 13
 
-double Kp = .66;
-double Ki = 0.002;
-double Kd = 0.001;
+double Kp = 0.76;
+double Ki = 1.5;
+double Kd = 0.00;
+double POn = 1.5;
 
 // Motor controllers
-MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1, Kp, Ki, Kd);
-MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1, Kp, Ki, Kd);
-MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, 1, Kp, Ki, Kd); // Reverse direction for rear motors
-MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1, Kp, Ki, Kd); // Reverse direction for rear motors
+MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1, Kp, Ki, Kd, POn);
+MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1, Kp, Ki, Kd, POn);
+MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, 1, Kp, Ki, Kd, POn); // Reverse direction for rear motors
+MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1, Kp, Ki, Kd, POn); // Reverse direction for rear motors
 
 MotorController* motors[4] = {&motor1, &motor2, &motor3, &motor4};
 
@@ -61,7 +62,7 @@ void PidDelay(int ms) {
     for(int i = 0; i < 1; i++) {
       motors[i]->PidLoop();
     }
-    delay(50);
+    delay(10);
     Serial.print("SP: ");
     Serial.print(motor1.getSetpoint());
     Serial.print(" RPM: ");
