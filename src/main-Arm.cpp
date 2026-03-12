@@ -70,6 +70,13 @@ void loop() {
     delay(1000);
     Servos::moveArm(ArmPositions::COLLAPSED);
 
+    //at keypad antenna
+    timer.waitUntil(170000);
+    Servos::moveArm(ArmPositions::READ_COLOR);
+    timer.waitUntil(172500);
+    ColorSensor::readThenSetLED(2);
+    timer.waitUntil(178500);
+
     //stop
     delay(10000000);
 }
