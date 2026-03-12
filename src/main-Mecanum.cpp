@@ -41,9 +41,9 @@
 #define DISABLE_CAN 1
 #define LED_PIN 13
 
-double Kp = 2;
-double Ki = 5;
-double Kd = 1;
+double Kp = .66;
+double Ki = 0.002;
+double Kd = 0.001;
 
 // Motor controllers
 MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1, Kp, Ki, Kd);
@@ -58,9 +58,16 @@ MecanumController mecanum(0.15, 0.14, 0.075); // Example wheelbase and trackwidt
 void PidDelay(int ms) {
   unsigned long startTime = millis();
   while(millis() < startTime + ms) {
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < 1; i++) {
       motors[i]->PidLoop();
     }
+    delay(50);
+    Serial.print("SP: ");
+    Serial.print(motor1.getSetpoint());
+    Serial.print(" RPM: ");
+    Serial.print(motor1.getRPM());
+    Serial.print(" OUT: ");
+    Serial.println(motor1.getOutput());
   }
 }
 
@@ -141,8 +148,12 @@ void loop() {
 
   // -- PRESS BUTTON 3 TIMES AND GO BACK --
   // Forward
-  setAllMotorSpeeds(0.1, 0.005, 0);
-  delay(4200);
+  //setAllMotorSpeeds(0.1, 0.005, 0);
+  motor1.setSetpoint(60);
+  PidDelay(1000000);
+
+  delay(100000);
+  /*
 
   // Back
   setAllMotorSpeeds(-0.1, 0.05, 0);
@@ -173,7 +184,7 @@ void loop() {
   delay(600);  
 
   //exit sync space
- /*
+ 
   //Pause for arm - happens at 6300
   timer.waitUntil(6400);
   setAllMotorSpeeds(0, 0, 0);

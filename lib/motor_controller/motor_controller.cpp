@@ -1,10 +1,11 @@
 #include <motor_controller.h>
+#include <cmath>
 
 MotorController::MotorController(int dirPin, int pwmPin, int slpPin, int fltPin, int encA, int encB, int csPin, int starting_direction, double Kp, double Ki, double Kd)
     : _dirPin(dirPin), _pwmPin(pwmPin), _slpPin(slpPin), _fltPin(fltPin), _encA(encA), _encB(encB), _csPin(csPin), starting_direction(starting_direction) {
   _encoder = new Encoder(_encA, _encB);
 
-  _pid = new PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+  _pid = new PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, REVERSE);
   _pid->SetMode(AUTOMATIC);
   _pid->SetOutputLimits(-255,255);
   if (!_encoder) {
