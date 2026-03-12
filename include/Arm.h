@@ -14,13 +14,17 @@ struct ArmPosition {
 // Predefined arm positions.
 const ArmPosition _ARM_POSITIONS[] = {
     {43, 128},
-    {10, 180}
+    {10, 180},
+    {173, 128},
+    {173, 50},
 };
 // Indices for the predefined arm positions. This lets the teensies communicate
 // an arm position over serial.
 namespace ArmPositions {
     const uint8_t READ_COLOR = 0;
     const uint8_t COLLAPSED = 1;
+    const uint8_t DOWN = 2;
+    const uint8_t KNOCK_DUCK = 3;
 };
 
 namespace BugPositions {

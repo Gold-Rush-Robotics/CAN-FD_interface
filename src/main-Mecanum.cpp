@@ -108,20 +108,18 @@ void setup() {
   digitalWrite(LED_PIN, LOW);
 
   SerialAtomics::send(Message::Ping);
-  Message msg = SerialAtomics::recvMsg();
-  if (msg != Message::Pong) {
-    Serial.println("ERROR: Didn't recieve `Pong` from arm teensy");
+  Message msg = Message::Invalid;
+  while (msg != Message::Pong) {
+    msg = SerialAtomics::recvMsg();
   }
-  Message msg = SerialAtomics::recvMsg();
-  if (msg != Message::StartGame) {
-    Serial.println("ERROR: Didn't receive `StartGame` from arm teensy");
+
+  msg = SerialAtomics::recvMsg();
+  while (msg != Message::StartGame) {
+    msg = SerialAtomics::recvMsg();
   }
 }
 
 void loop() {
-  Timer timer = Timer();
-
-
   digitalWrite(LED_PIN, HIGH);
   delay(50);
   digitalWrite(LED_PIN, LOW);
@@ -140,64 +138,50 @@ void loop() {
     Serial.println("WARNING: Motor4 fault detected");
   }
 
-  // -- PRESS BUTTON 3 TIMES AND GO BACK --
-  // Forward
-  setAllMotorSpeeds(0.1, 0.005, 0);
-  delay(4200);
 
-  // Back
-  setAllMotorSpeeds(-0.1, 0.05, 0);
-  delay(600);
+  // === PRESS THE BIG RED BUTTON ===
 
   // Forward
-  setAllMotorSpeeds(0.1, 0.05, 0);
-  delay(800);
+  setAllMotorSpeeds(0.2, 0.01, 0);
+  delay(1800);
 
-  // Back
-  setAllMotorSpeeds(-0.1, 0.05, 0);
-  delay(600);
+  for (int i = 0; i < 3; i++) {
+    // Forward
+    setAllMotorSpeeds(0.1, 0.05, 0);
+    delay(800);
+
+    // Back
+    setAllMotorSpeeds(-0.1, 0.05, 0);
+    delay(600);
+  }
+
+  // stop & move arm to read
   setAllMotorSpeeds(0, 0, 0);
-
-  // align with button antenna
   SerialAtomics::send(Message::MoveArm);
   SerialAtomics::send(ArmPositions::READ_COLOR);
-  setAllMotorSpeeds(0.1, -0.06, 0.09);
-  delay(900);
-  setAllMotorSpeeds(-0.05, 0, 0);
-  delay(200); 
+  delay(1000);
 
   // pause for read
   SerialAtomics::send(Message::ReadThenSetLED);
   SerialAtomics::send(0);
   setAllMotorSpeeds(0, 0, 0);
-  delay(1000);
+  delay(5000);
 
-  // Back
+  // Arm down
   SerialAtomics::send(Message::MoveArm);
   SerialAtomics::send(ArmPositions::COLLAPSED);
-  setAllMotorSpeeds(-0.1, 0, 0);
-  delay(600);  
 
-  //exit sync space
 
-  // -- GO TO SPINNY THING --
-  //Bump wall to square
-  setAllMotorSpeeds(0, 0.1, 0);
-  delay(1200);
+  // === SPIN THAT KNOB ===
+  
 
-  //Bump button to square
-  setAllMotorSpeeds(0.1, 0, 0);
-  delay(1000);
-  setAllMotorSpeeds(-0.1, 0, 0);
-  delay(600);
-
-  //Drive Right to push duck
+  // Drive Right to push duck
   setAllMotorSpeeds(0, -0.1, 0);
   delay(2700);
 
+  // back up and away from duck
   setAllMotorSpeeds(0, 0.1, 0);
   delay(500);
-
   setAllMotorSpeeds(-0.1, 0, 0);
   delay(1000);
 
@@ -205,9 +189,9 @@ void loop() {
   setAllMotorSpeeds(0, 0, -0.25);
   delay(2000);
 
-  // This gets close to crater edge
+  // Move to crater
   setAllMotorSpeeds(0.1, 0, 0);
-  delay(2200);
+  delay(2500);
 
   //hit far wall 
   setAllMotorSpeeds(0, 0.1, 0);
@@ -232,7 +216,6 @@ void loop() {
   delay(1500);
   setAllMotorSpeeds(0, 0.1, 0);
   delay(1200);
-  
 
   //run to knob
   setAllMotorSpeeds(-0.05, 0.005, 0);
@@ -242,38 +225,47 @@ void loop() {
 
   //back off knob
   setAllMotorSpeeds(0.05, -0.05, 0);
-  delay(900);
+  delay(1000);
 
-  //rotate 180 + 45 to read
-  setAllMotorSpeeds(0, 0, 0.2);
-  delay(1800 * 2);
-  setAllMotorSpeeds(0, 0, 0);
+  //rotate 180 to read
+  setAllMotorSpeeds(0, 0, 0.25);
+  delay(3400);
 
-  //align with antenna
+  // move arm into reading pos & get closer
   SerialAtomics::send(Message::MoveArm);
   SerialAtomics::send(ArmPositions::READ_COLOR);
-  setAllMotorSpeeds(0.05, 0, 0);
-  delay(1100);
-  setAllMotorSpeeds(0, 0.05, 0);
-  delay(1200);
-  setAllMotorSpeeds(0.05, 0, 0);
-  delay(300);
-  
+  setAllMotorSpeeds(.05, 0, 0);
+  delay(1000);
+
+  // align w/ antenna
+  setAllMotorSpeeds(0, -0.05, 0);
+  delay(1500);
 
   //pause for read
   SerialAtomics::send(Message::ReadThenSetLED);
   SerialAtomics::send(1);
   setAllMotorSpeeds(0, 0, 0);
-  delay(2000);
+  delay(5000);
 
   //back off antenna
-  setAllMotorSpeeds(-0.1, 0, 0);
+  setAllMotorSpeeds(-0.1, .05, 0);
   delay(950);
 
-  //align with crater
+
+  // === HELLDIVERS ===
+
+
+  // move towards crater
   setAllMotorSpeeds(0, 0.1, 0);
-  delay(1300);
-  setAllMotorSpeeds(0, 0, 0);
+  delay(800);
+
+  // slam into wall behind spinny thing antenna
+  setAllMotorSpeeds(0.15, 0, 0);
+  delay(2000);
+
+  // move left to where helldivers should be deployed
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(800);
 
   // DEPLOY THE HELLDIVERS
   SerialAtomics::send(Message::MoveBugs);
@@ -281,15 +273,16 @@ void loop() {
   delay(3000);
   SerialAtomics::send(Message::MoveBugs);
   SerialAtomics::send(BugPositions::COLLAPSED);
+  delay(1000);
   SerialAtomics::send(Message::MoveArm);
   SerialAtomics::send(ArmPositions::COLLAPSED);
+  delay(1000);
 
-  //bump against long wall
-  setAllMotorSpeeds(0, 0.1, -0.1);
-  delay(2000);
+  while (true) {}
 
 
-  // --- MOVE BACK TO START
+  // === BACK TO START ===
+
 
   //move back towards button along long wall
   setAllMotorSpeeds(-0.1, 0.005, 0);
@@ -321,9 +314,8 @@ void loop() {
   //Perfectly Square
   
 
-  
+  // === SCORE SECOND DUCK ===
 
-  // --- PUSH DUCK #2
 
   //bump keypad antenna
   setAllMotorSpeeds(-0.1, 0.005, 0);
@@ -337,11 +329,9 @@ void loop() {
   setAllMotorSpeeds(0.05, 0.05, 0);
   delay(9000);
 
-  // --- END OF PUSH DUCK #2
 
+  // === KEYPAD ===
 
-
-  // --- KEYPAD SOLENOIDS
 
   //back out and rotate -90
   setAllMotorSpeeds(-0.05, -0.05, 0);
@@ -395,245 +385,35 @@ void loop() {
   setAllMotorSpeeds(0, -0.05, 0); //provide force into it
   delay(200);
 
+  // wait for a few keypad attempts
+  delay(5000);
 
+  // back off wall
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(1000);
 
-
-
-
-
-
-
-
-  //Stop
-  setAllMotorSpeeds(0, 0, 0);
-  delay(10000000);
-
-  // Push duck into blue
-  // setAllMotorSpeeds(0, 0.25, 0);
-  // delay(300);
-
-  // setAllMotorSpeeds(0.2, 0, 0);
-  // delay(1800);
-
-  // setAllMotorSpeeds(0.05, 0.25, 0);
-  // delay(4100);
-
-  // setAllMotorSpeeds(0.2, 0, 0);
-  // delay(800);
-
-  // setAllMotorSpeeds(0.1, -0.25, 0);
-  // delay(300);
-
-  // setAllMotorSpeeds(0.2, 0, 0);
-  // delay(400);
   
-  // setAllMotorSpeeds(-0.2, 0.05, 0);
-  // delay(600);
+  // === DA BOWL ===
+  
 
-  /*
-  // TURN
-  setAllMotorSpeeds(0, 0, 0.5);
-  delay(1500);
-
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(1100);
-
-  setAllMotorSpeeds(-0.1, 0, 0);
-  delay(200);
-
-  setAllMotorSpeeds(0, -0.125, 0);
-  delay(3000);
-
-  setAllMotorSpeeds(0.1, -0.1, 0);
-  delay(3000);
-
-  // -- GO TO KEYPAD --
-  setAllMotorSpeeds(-0.1, 0.1, 0);
-  delay(200);
-
-  setAllMotorSpeeds(0, 0.2, 0);
+  // knock duck off middle station
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::READ_COLOR);
+  delay(500);
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::DOWN);
+  delay(500);
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::KNOCK_DUCK);
   delay(500);
 
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(500);
-
-  setAllMotorSpeeds(-0.2, 0, 0);
-  delay(700);
-
-  // Turn
-  setAllMotorSpeeds(0, 0, -0.5);
-  delay(1600);
-
-  setAllMotorSpeeds(0.2, -0.1, 0);
-  delay(1600);
-
-  // Slam into button antenna
-  setAllMotorSpeeds(0.05, -0.25, 0);
-  delay(3800);
-
-  setAllMotorSpeeds(0.1, 0.1, 0);
-  delay(300);
-
-  // Hit back wall
-  setAllMotorSpeeds(-0.15, 0, 0);
-  delay(3500);
-
-  setAllMotorSpeeds(0.2, 0, 0);
-  delay(100);
-  
-  // Hit keypad antenna
-  setAllMotorSpeeds(0, 0.15, 0);
-  delay(1800);
-  
-  setAllMotorSpeeds(0, -0.15, 0);
-  delay(100);
-
-  setAllMotorSpeeds(-0.15, 0, 0);
-  delay(200);
-
-  setAllMotorSpeeds(0.15, 0, 0);
-  delay(800);
-
-  setAllMotorSpeeds(0, 0.15, 0);
-  delay(550);
-
-  // 3 attempts at hitting keypad
-  for (int i = 0; i < 3; i++) {
-    // Push into keypad
-    setAllMotorSpeeds(-0.025, 0.025, 0);
-    delay(12000); // align + 2-3 attempts
-  
-    // Go back for realignment
-    setAllMotorSpeeds(0.1, -0.12, 0);
-    delay(500);
-  }
-
-  // -- PUSH DUCK TO BLUE SQUARE --
-
-  // Align to duck
-  setAllMotorSpeeds(0.05, -0.15, 0);
-  delay(700);
-
-  // Push duck into blue square
-  setAllMotorSpeeds(0.15, 0.075, 0);
-  delay(1400);
-
-  // -- GO HOME --
-  setAllMotorSpeeds(-0.15, 0, 0);
-  delay(600);
-
-  setAllMotorSpeeds(-0.05, -0.15, 0);
-  delay(4000);
-
-  setAllMotorSpeeds(-0.15, -0.05, 0);
-  delay(4000);
-
-  */
-
+  // drive forwards to make sure we knock duck off
+  setAllMotorSpeeds(0.05, 0, 0);
+  delay(1000);
 
   // -- STOP ALL MOTORS --
   setAllMotorSpeeds(0, 0, 0);
   while (true) {
     
   }
-
-  // setAllMotorSpeeds(0.0, 0.5, 0.0); // Example: move sidewards at half speed
-  // delay(5000);
-
-  // setAllMotorSpeeds(0.0, 0.0, 0.5); // Example: rotate clockwise at half speed
-  // delay(5000);
-
-
-  CANJointCommand cmd;
-  #if !DISABLE_CAN
-  if (canInterface.readJointCommand(cmd)) {
-    Serial.print("Received CAN command, joint=");
-    Serial.print(cmd.joint_name);
-    Serial.print(", velocity=");
-    Serial.println(cmd.velocity);
-    // Debug string contents
-    Serial.print("NODE_ROLE: ");
-    Serial.println(NODE_ROLE);
-    Serial.print("cmd.joint_name: ");
-    Serial.println(cmd.joint_name);
-
-    // Use strcmp for robust comparison
-    if (strcmp(NODE_ROLE, "FRONT") == 0 && cmd.joint_name.startsWith("F")) {
-      if (cmd.joint_name.endsWith("L")) {
-        Serial.println("Setting Motor1 speed");
-        motor1.setSpeedRPM(cmd.velocity);
-      } else if (cmd.joint_name.endsWith("R")) {
-        Serial.println("Setting Motor2 speed");
-        motor2.setSpeedRPM(cmd.velocity);
-      }
-    } else if (strcmp(NODE_ROLE, "REAR") == 0 && cmd.joint_name.startsWith("R")) {
-      if (cmd.joint_name.endsWith("L")) {
-        Serial.println("Setting Motor3 speed");
-        motor3.setSpeedRPM(cmd.velocity);
-      } else if (cmd.joint_name.endsWith("R")) {
-        Serial.println("Setting Motor4 speed");
-        motor4.setSpeedRPM(cmd.velocity);
-      }
-    } else {
-      Serial.println("Condition not met for motor control");
-    }
-  } else {
-    static unsigned long lastNoCmd = 0;
-    if (millis() - lastNoCmd > 1000) {
-      Serial.println("No CAN command received");
-      lastNoCmd = millis();
-    }
-  }
-  #endif
-
-  static unsigned long lastHeartbeat = 0;
-  if (millis() - lastHeartbeat > 1000) {
-    lastHeartbeat = millis();
-    #if !DISABLE_CAN
-    if (canInterface.sendHeartbeat()) {
-      Serial.println("Heartbeat sent");
-    } else {
-      Serial.println("ERROR: Failed to send heartbeat");
-    }
-    #else
-    Serial.println("Heartbeat skipped (CAN disabled)");
-    #endif
-  }
-
-  static unsigned long lastFeedback = 0;
-  if (millis() - lastFeedback > 1000) { // Increased to 1000ms to reduce bus load
-    lastFeedback = millis();
-    #if !DISABLE_CAN
-    if (strcmp(NODE_ROLE, "FRONT") == 0) {
-      float rpm1 = motor1.getRPM();
-      float rpm2 = motor2.getRPM();
-      float rpm3 = motor3.getRPM();
-      float rpm4 = motor4.getRPM();
-      Serial.print("Feedback FL, RPM=");
-      Serial.println(rpm1);
-      canInterface.sendJointFeedback("FL", rpm1);
-      Serial.print("Feedback FR, RPM=");
-      Serial.println(rpm2);
-      canInterface.sendJointFeedback("FR", rpm2);
-      Serial.print("Feedback RL, RPM=");
-      Serial.println(rpm3);
-      canInterface.sendJointFeedback("RL", rpm3);
-      Serial.print("Feedback RR, RPM=");
-      Serial.println(rpm4);
-      canInterface.sendJointFeedback("RR", rpm4);
-    } else if (strcmp(NODE_ROLE, "REAR") == 0) {
-      float rpm1 = motor3.getRPM();
-      float rpm2 = motor4.getRPM();
-      Serial.print("Feedback RL, RPM=");
-      Serial.println(rpm1);
-      canInterface.sendJointFeedback("RL", rpm1);
-      Serial.print("Feedback RR, RPM=");
-      Serial.println(rpm2);
-      canInterface.sendJointFeedback("RR", rpm2);
-    }
-    #else
-    Serial.println("Feedback skipped (CAN disabled)");
-    #endif
-  }
-  delay(10);
 }

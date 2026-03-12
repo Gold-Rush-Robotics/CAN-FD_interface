@@ -15,32 +15,29 @@ enum Message: uint8_t {
 const uint8_t MESSAGE_MAX = Message::ReadThenSetLED;
 
 namespace SerialAtomics {
-    #define Serial Serial7
-
     void setup() {
-        Serial.begin(9600);
+        Serial7.begin(9600);
     }
 
     void send(uint8_t byte) {
-        Serial.write(byte);
+        Serial7.write(byte);
     }
 
     uint8_t recvByte() {
-        while (!Serial.available()) {
+        while (Serial7.available() < 1) {
             delay(10);
         }
+        int byte = Serial7.read();
 
-        return (uint8_t) Serial.read();
+        return (uint8_t) byte;
     }
-
-    #undef Serial
 
     Message recvMsg() {
         uint8_t byte = recvByte();
-        if (byte <= MESSAGE_MAX) {
+        if (byte <= MESSAGE_MAX && byte >= 0) {
             return (Message) byte;
         } else {
-            Serial.println("Error: Received undefined message");
+            Serial.println("Error: Received undefined message " + String(byte));
             return Message::Invalid;
         }
     }

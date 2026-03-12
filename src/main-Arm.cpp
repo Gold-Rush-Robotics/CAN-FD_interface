@@ -34,13 +34,15 @@ void setup() {
 
     // Move to start pos
     Servos::move(3, BugPositions::COLLAPSED);
+    delay(300);
     Servos::moveArm(ArmPositions::COLLAPSED);
 
 
+    #ifndef POS_MODE
     // Wait for mecanum board to setup
-    Message msg = SerialAtomics::recvMsg();
-    if (msg != Message::Ping) {
-        Serial.println("ERROR: Didn't recieve `ping` from mecanum teensy");
+    Message msg = Message::Invalid;
+    while (msg != Message::Ping) {
+        msg = SerialAtomics::recvMsg();
     }
     SerialAtomics::send(Message::Pong);
 
@@ -48,22 +50,36 @@ void setup() {
     while (true) {
         uint16_t lux = ColorSensor::readLux();
 
-        if (lux >= 500) {
+        if (lux >= 0) {
             SerialAtomics::send(Message::StartGame);
             break;
         }
     }
+    #endif
 }
 
 void loop() {
+    #ifdef POS_MODE
+    Serial.setTimeout(100000);
+    while (true) {
+        Serial.print("Servo 1: ");
+        Servos::move(1, Serial.readStringUntil('\n', 3).toInt());
+        Serial.print("Servo 2: ");
+        Servos::move(2, Serial.readStringUntil('\n', 3).toInt());
+    }
+    #endif
+
     while (true) {
         switch (SerialAtomics::recvMsg()) {
             case Message::MoveArm:
                 Servos::moveArm(SerialAtomics::recvByte());
+                break;
             case Message::MoveBugs:
                 Servos::move(3, SerialAtomics::recvByte());
+                break;
             case Message::ReadThenSetLED:
                 ColorSensor::readThenSetLED((size_t) SerialAtomics::recvByte());
+                break;
             default:
                 Serial.println("Error: Received unexpected message in gameplay loop");
         }
