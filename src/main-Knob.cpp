@@ -9,11 +9,11 @@ void setup(){
 }
 
 void loop(){
-  delay(40000);
+  delay(35000);
 
   
   spinKnobServo(1000);
-  delay(20000);
+  delay(30000);
   spinKnobServo(1500);
 
   //stop

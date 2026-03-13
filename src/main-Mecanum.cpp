@@ -43,10 +43,6 @@
 #define DISABLE_CAN 1
 #define LED_PIN 13
 
-double Kp = 2;
-double Ki = 5;
-double Kd = 1;
-
 // Motor controllers
 MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1);
 MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1);
@@ -162,7 +158,7 @@ void loop() {
 
   // Forward
   setAllMotorSpeeds(0.2, 0.01, 0);
-  delay(1800);
+  delay(1700);
 
   for (int i = 0; i < 3; i++) {
     // Forward
@@ -182,7 +178,7 @@ void loop() {
 
   // tad bit forward
   setAllMotorSpeeds(0.05, 0, 0);
-  delay(1200);
+  delay(1800);
 
   // pause for read
   SerialAtomics::send(Message::ReadThenSetLED);
@@ -304,7 +300,7 @@ void loop() {
 
   // move left to where helldivers should be deployed
   setAllMotorSpeeds(0.02, 0.1, 0);
-  delay(900);
+  delay(1500);
 
   // Stop and deploy HELLDIVERS
   setAllMotorSpeeds(0, 0, 0);
@@ -320,11 +316,13 @@ void loop() {
   SerialAtomics::send(ArmPositions::COLLAPSED);
   delay(2700);
 
-  // continue moving past helldivers
-  setAllMotorSpeeds(0.02, 0.1, 0);
-  delay(5200);
+  // continue moving past helldivers, bump button, back off
+  setAllMotorSpeeds(0.005, 0.1, 0);
+  delay(8000);
+  setAllMotorSpeeds(0.005, -0.1, 0);
+  delay(1000);
 
-  // back off wall after deploying HELLDIVERS
+  // back off wall
   setAllMotorSpeeds(-0.15, 0, 0);
   delay(1500);
 
@@ -497,13 +495,15 @@ void loop() {
   delay(1800);
 
   //re bump
-  setAllMotorSpeeds(0.05, -0.05, 0);
-  delay(3000);
+  setAllMotorSpeeds(0.05, -0.02, 0);
+  delay(2000);
+  setAllMotorSpeeds(0.1, 0, 0);
+  delay(300);
 
   //back out
   setAllMotorSpeeds(0, 0.05, 0);
-  delay(500);
-  setAllMotorSpeeds(-0.5, 0, 0);
+  delay(300);
+  setAllMotorSpeeds(-0.05, 0, 0);
   delay(800);
 
   //go to crater
@@ -512,24 +512,26 @@ void loop() {
   setAllMotorSpeeds(0, 0.1, 0);
   delay(2500);
   setAllMotorSpeeds(0.1, 0, 0);
-  delay(1900);
+  delay(2000);
 
   //put arm in duck position
   setAllMotorSpeeds(0, 0, 0);
   SerialAtomics::send(Message::MoveArm);
   SerialAtomics::send(ArmPositions::DOWN); 
-  delay(1000);
+  delay(2000);
   SerialAtomics::send(Message::MoveArm);
   SerialAtomics::send(ArmPositions::KNOCK_DUCK); 
+  delay(2000);
 
   //swipe duck
-  setAllMotorSpeeds(0, -0.1, 0);
-  delay(2000);
+  setAllMotorSpeeds(0, -0.05, 0);
+  delay(3000);
   
   //read crater antenna
   setAllMotorSpeeds(0, 0, 0);
   SerialAtomics::send(Message::MoveArm);
-  SerialAtomics::send(ArmPositions::READ_COLOR); 
+  SerialAtomics::send(ArmPositions::ANT_READ_COLOR); 
+  delay(1000);
 
   //go to read position
   setAllMotorSpeeds(0, 0.1, 0);
@@ -542,16 +544,6 @@ void loop() {
   delay(5000);
 
   // === END Of KNOCK ANTENNA DUCK ===
-
-
-  // === ET PHONE HOME ===
-
-  setAllMotorSpeeds(-0.1, 0, 0);
-  delay(2000);
-  setAllMotorSpeeds(-0.5, -0.5, 0);
-  delay(8000);
-
-  // === END ET PHONE HOME ===
 
   // -- STOP ALL MOTORS --
   setAllMotorSpeeds(0, 0, 0);
