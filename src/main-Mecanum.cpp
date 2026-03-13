@@ -363,13 +363,13 @@ void loop() {
   
   //push duck forward
   setAllMotorSpeeds(0, -0.1, 0);
-  delay(3800);
+  delay(3500);
 
   //realign around ducks
   setAllMotorSpeeds(0, 0.1, 0);
   delay(500);
   setAllMotorSpeeds(0.1, 0, 0);
-  delay(1200);
+  delay(1500);
   setAllMotorSpeeds(0, -0.1, 0);
   delay(1000);
 
@@ -441,7 +441,7 @@ void loop() {
   delay(200);
 
   // wait for a few keypad attempts
-  delay(10000);
+  delay(15000);
 
   // === END OF PUSH KEYPAD
 
@@ -464,7 +464,7 @@ void loop() {
 
   // push in
   setAllMotorSpeeds(0.05, -0.005, 0);
-  delay(1500);
+  delay(1800);
 
   // pause for read
   SerialAtomics::send(Message::ReadThenSetLED);
@@ -481,11 +481,17 @@ void loop() {
   setAllMotorSpeeds(-0.1, 0, 0);
   delay(500);
 
+  //collapse arm
+  setAllMotorSpeeds(0, 0, 0);
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::COLLAPSED); 
+  delay(1000); 
+
   //localize off of antenna
   setAllMotorSpeeds(0, -0.1, 0);
-  delay(1500);
+  delay(1800);
   setAllMotorSpeeds(0.1, 0.05, 0);
-  delay(2200);
+  delay(1800);
   setAllMotorSpeeds(0, 0.05, 0);
   delay(2000);
 
@@ -496,10 +502,8 @@ void loop() {
   delay(1800);
 
   //re bump
-  setAllMotorSpeeds(0.05, 0, 0);
+  setAllMotorSpeeds(0.05, 0.025, 0);
   delay(2000);
-  setAllMotorSpeeds(0, -0.05, 0);
-  delay(1200);
   setAllMotorSpeeds(0, 0.05, 0);
   delay(500);
 
@@ -509,7 +513,7 @@ void loop() {
   setAllMotorSpeeds(0, 0.1, 0);
   delay(2500);
   setAllMotorSpeeds(0.1, 0, 0);
-  delay(1500);
+  delay(1800);
 
 
 
