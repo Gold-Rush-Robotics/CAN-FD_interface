@@ -1,11 +1,19 @@
+#define ServoSerialPort Serial1
+
+// Uncomment to make arm just print color readings and not do game loop
+// #define COLOR_SENSOR_TUNING
+
+#ifdef COLOR_SENSOR_TUNING
+#define START_LUX 9999
+#else
+#define START_LUX 50
+#endif
+
 #include <ColorSensor.h>
 #include <LED.h>
 #include <Arm.h>
 #include <timer.h>
 #include <SerialAtomics.h>
-
-
-#define ServoSerialPort Serial1
 
 
 void setup() {
@@ -37,8 +45,6 @@ void setup() {
     delay(300);
     Servos::moveArm(ArmPositions::COLLAPSED);
 
-
-    #ifndef POS_MODE
     // Wait for mecanum board to setup
     Message msg = Message::Invalid;
     while (msg != Message::Ping) {
@@ -55,22 +61,20 @@ void setup() {
         //     Serial.println(lux);
         //     delay(10);
         // }
-        if (lux <= 50) {
+        if (lux <= START_LUX) {
             SerialAtomics::send(Message::StartGame);
             break;
         }
     }
-    #endif
 }
 
 void loop() {
-    #ifdef POS_MODE
-    Serial.setTimeout(100000);
+    #ifdef COLOR_SENSOR_TUNING
+    Servos::moveArm(ArmPositions::READ_COLOR);
     while (true) {
-        Serial.print("Servo 1: ");
-        Servos::move(1, Serial.readStringUntil('\n', 3).toInt());
-        Serial.print("Servo 2: ");
-        Servos::move(2, Serial.readStringUntil('\n', 3).toInt());
+        setLedColor(0, LOW, LOW, LOW);
+        ColorSensor::readThenSetLED(0);
+        delay(3000);
     }
     #endif
 

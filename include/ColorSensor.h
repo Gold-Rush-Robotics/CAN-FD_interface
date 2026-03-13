@@ -20,26 +20,39 @@ struct ReferenceColor {
 // Constant colors we reference against.
 // We store the name of the color, the RGB to match against, and then the color we should send to our RGB LEDs.
 const ReferenceColor COLORS[] = {
+    // other readings
+    // (151, 55, 42)
     {
         .name = "Red",
-        .match = {234, 13, 24},
+        .match = {255, 0, 0},
         .led = {HIGH, LOW, LOW}
     },
+    // other readings
+    // (38, 145, 56)
     {
         .name = "Green",
-        .match = {23, 150, 77},
+        .match = {0, 255, 0},
         .led = {LOW, HIGH, LOW}
     },
+    // other readings
+    // (28, 72, 149)
+    // (43, 76, 130) perfect
+    // (29, 75, 148) left
+    // (23, 67, 171)
     {
         .name = "Blue",
-        .match = {10, 50, 200},
+        .match = {0, 0, 255},
         .led = {LOW, LOW, HIGH}
     },
-    {
-        .name = "Purple",
-        .match = {110, 35, 119},
-        .led = {HIGH, LOW, HIGH}
-    }
+    // for now we are ignoring purple and setting the color to purple if it reads blue and the red value is above 35.
+    // See code in readThenSetLED.
+    // // other readings
+    // // (43, 63, 148)
+    // {
+    //     .name = "Purple",
+    //     .match = {43, 63, 255},
+    //     .led = {HIGH, LOW, HIGH}
+    // }
 };
 
 namespace ColorSensor {
@@ -70,30 +83,37 @@ namespace ColorSensor {
         return sensor.calculateLux(r, g, b);
     }
 
+    Color readColor() {
+        float r, g, b;
+        sensor.getRGB(&r, &g, &b);
+        return {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+    }
+
     void readThenSetLED(size_t led) {
         float r, g, b;
         sensor.getRGB(&r, &g, &b);
-        Color read1 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        Color read1 = readColor();
         delay(10);
         sensor.getRGB(&r, &g, &b);
-        Color read2 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        Color read2 = readColor();
         delay(10);
         sensor.getRGB(&r, &g, &b);
-        Color read3 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        Color read3 = readColor();
         delay(10);
         sensor.getRGB(&r, &g, &b);
-        Color read4 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        Color read4 = readColor();
         delay(10);
         sensor.getRGB(&r, &g, &b);
-        Color read5 = {(uint8_t) std::round(r), (uint8_t) std::round(g), (uint8_t) std::round(b)};
+        Color read5 = readColor();
+
         uint8_t red = (read1.r + read2.r + read3.r + read4.r + read5.r)/5;
         uint8_t blue = (read1.b + read2.b + read3.b + read4.b + read5.b)/5;
         uint8_t green = (read1.g + read2.g + read3.g + read4.g + read5.g)/5;
         Color readFinal = {red, green, blue};
 
-        #ifdef COLOR_SENSOR_DEBUG
+        #ifdef COLOR_SENSOR_TUNING
         Serial.print("Color sensor read: ");
-        debugColor(read);
+        debugColor(readFinal);
         #endif
 
         float lowestDistance = INFINITY;
@@ -111,6 +131,9 @@ namespace ColorSensor {
             Serial.print(": ");
             Serial.println(distance);
             #endif
+        }
+        if (closestColor.b == HIGH && readFinal.r > 40) {
+            closestColor.r = HIGH;
         }
 
         setLedColor(led, closestColor.r, closestColor.g, closestColor.b);

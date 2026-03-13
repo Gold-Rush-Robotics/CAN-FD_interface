@@ -48,23 +48,14 @@ double Ki = 5;
 double Kd = 1;
 
 // Motor controllers
-MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1, Kp, Ki, Kd);
-MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1, Kp, Ki, Kd);
-MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, 1, Kp, Ki, Kd); // Reverse direction for rear motors
-MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1, Kp, Ki, Kd); // Reverse direction for rear motors
+MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1);
+MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1);
+MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, 1); // Reverse direction for rear motors
+MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1); // Reverse direction for rear motors
 
 MotorController* motors[4] = {&motor1, &motor2, &motor3, &motor4};
 
 MecanumController mecanum(0.15, 0.14, 0.075); // Example wheelbase and trackwidth in meters
-
-void PidDelay(int ms) {
-  unsigned long startTime = millis();
-  while(millis() < startTime + ms) {
-    for(int i = 0; i < 4; i++) {
-      motors[i]->PidLoop();
-    }
-  }
-}
 
 // CAN interface
 CANInterface canInterface;
@@ -76,7 +67,7 @@ void setAllMotorSpeeds(float linear_x, float linear_y, float angular_z) {
   Serial.print("Wheel speeds: ");
   for (int i = 0; i < 4; i++) {
     Serial.print(wheelSpeeds[i]);
-    motors[i]->setSetpoint(wheelSpeeds[i] * 30.0/1.6);
+    motors[i]->setSpeedRPM(wheelSpeeds[i] * 30.0/1.6);
 
     Serial.print(" ");
   }
@@ -154,8 +145,6 @@ void loop() {
   if (digitalRead(motor4.getFaultPin()) == LOW) {
     Serial.println("WARNING: Motor4 fault detected");
   }
-
-  /*
 
   // === ROTATE TO GOOD START POSITION
 
@@ -256,6 +245,12 @@ void loop() {
   setAllMotorSpeeds(0, 0.1, 0);
   delay(1200);
 
+  //push duck out of way
+  setAllMotorSpeeds(0.1, 0.005, 0);
+  delay(1500);
+  setAllMotorSpeeds(-0.1, 0.005, 0);
+  delay(1500);
+
   //run to knob
   setAllMotorSpeeds(-0.05, 0.005, 0);
   delay(2000);
@@ -347,7 +342,7 @@ void loop() {
   //Start of corner to keypad test
 
   // === END OF HELLDIVERS ===
-  */
+
 
   // --- PUSH DUCK #2
 
@@ -375,7 +370,7 @@ void loop() {
 
   //push ducks and return
   setAllMotorSpeeds(-0.1, 0, 0);
-  delay(1000);
+  delay(1400);
   setAllMotorSpeeds(0.08, 0.08, 0);
   delay(1500);
 
@@ -463,7 +458,7 @@ void loop() {
   delay(1000);
 
   // push in
-  setAllMotorSpeeds(0.05, -0.005, 0);
+  setAllMotorSpeeds(0.05, -0.0025, 0);
   delay(1800);
 
   // pause for read
@@ -502,10 +497,14 @@ void loop() {
   delay(1800);
 
   //re bump
-  setAllMotorSpeeds(0.05, 0.025, 0);
-  delay(2000);
+  setAllMotorSpeeds(0.05, -0.05, 0);
+  delay(3000);
+
+  //back out
   setAllMotorSpeeds(0, 0.05, 0);
   delay(500);
+  setAllMotorSpeeds(-0.5, 0, 0);
+  delay(800);
 
   //go to crater
   setAllMotorSpeeds(-0.1, 0, 0);
@@ -513,11 +512,46 @@ void loop() {
   setAllMotorSpeeds(0, 0.1, 0);
   delay(2500);
   setAllMotorSpeeds(0.1, 0, 0);
-  delay(1800);
+  delay(1900);
 
+  //put arm in duck position
+  setAllMotorSpeeds(0, 0, 0);
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::DOWN); 
+  delay(1000);
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::KNOCK_DUCK); 
 
+  //swipe duck
+  setAllMotorSpeeds(0, -0.1, 0);
+  delay(2000);
+  
+  //read crater antenna
+  setAllMotorSpeeds(0, 0, 0);
+  SerialAtomics::send(Message::MoveArm);
+  SerialAtomics::send(ArmPositions::READ_COLOR); 
+
+  //go to read position
+  setAllMotorSpeeds(0, 0.1, 0);
+  delay(1500);
+
+  // pause for read
+  setAllMotorSpeeds(0, 0, 0);
+  SerialAtomics::send(Message::ReadThenSetLED);
+  SerialAtomics::send(2);
+  delay(5000);
 
   // === END Of KNOCK ANTENNA DUCK ===
+
+
+  // === ET PHONE HOME ===
+
+  setAllMotorSpeeds(-0.1, 0, 0);
+  delay(2000);
+  setAllMotorSpeeds(-0.5, -0.5, 0);
+  delay(8000);
+
+  // === END ET PHONE HOME ===
 
   // -- STOP ALL MOTORS --
   setAllMotorSpeeds(0, 0, 0);

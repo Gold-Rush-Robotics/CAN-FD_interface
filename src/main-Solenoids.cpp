@@ -44,7 +44,7 @@ void funcInputter(int num)
 
 void loop() {
   // Prototype Optimization 2
-  delay(20000);
+  delay(80000);
 
   for (int i = 0; i < repeatCount; i++)
   {
