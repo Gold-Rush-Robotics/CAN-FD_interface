@@ -56,8 +56,14 @@ namespace Servos {
         }
 
         ArmPosition pos = _ARM_POSITIONS[pos_idx];
-        move(1, pos.servo1);
-        move(2, pos.servo2);
+        if(pos_idx == ArmPositions::KNOCK_DUCK){
+            move(1, pos.servo1);
+            delay(25);
+            move(2, pos.servo2);
+        } else {
+            move(1, pos.servo1);
+            move(2, pos.servo2);
+        }
         
         #ifdef ARM_DEBUG
         for (int i = 1; i <= 2; i++) {

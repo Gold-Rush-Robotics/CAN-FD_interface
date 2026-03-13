@@ -84,7 +84,7 @@ void setAllMotorSpeeds(float linear_x, float linear_y, float angular_z) {
   Serial.print("Wheel speeds: ");
   for (int i = 0; i < 4; i++) {
     Serial.print(wheelSpeeds[i]);
-    motors[i]->setSetpoint(wheelSpeeds[i] * 30.0/1.6);
+    motors[i]->setSpeedRPM(wheelSpeeds[i] * 30.0/1.6);
 
     Serial.print(" ");
   }
@@ -137,9 +137,10 @@ void setup() {
   }
 
   msg = SerialAtomics::recvMsg();
+  /*
   while (msg != Message::StartGame) {
     msg = SerialAtomics::recvMsg();
-  }
+  }*/
 }
 
 void loop() {
@@ -160,15 +161,24 @@ void loop() {
   if (digitalRead(motor4.getFaultPin()) == LOW) {
     Serial.println("WARNING: Motor4 fault detected");
   }
-
+  // === START LIGHT TO ORIGINAL POSITION
+  /*
+  setAllMotorSpeeds(-0.1, -0.1, 0);
+  PidDelay(500);
+  setAllMotorSpeeds(0, 0, -0.25);
+  PidDelay(1800);
+  setAllMotorSpeeds(-0.1, 0.1, 0);
+  PidDelay(500);
+  setAllMotorSpeeds(0, 0, 0);
+  */
   // === PRESS THE BIG RED BUTTON ===
 
   // Forward
-  setAllMotorSpeeds(0.2, 0.01, 0);
+  setAllMotorSpeeds(0.0, 0.05, 0);
   //Start of PID and PID Delay
   PidDelay(1800);
-
-  for (int i = 0; i < 3; i++) {
+  /*
+  for (int i = 0; i < 5; i++) {
     // Forward
     setAllMotorSpeeds(0.1, 0.05, 0);
     PidDelay(800);
@@ -375,7 +385,7 @@ void loop() {
   PidDelay(600);
 
   // -- TODO --: Knock off middle duck and read antenna then read keypad antenna
-
+  */
   // -- STOP ALL MOTORS --
   setAllMotorSpeeds(0, 0, 0);
   while (true) {
