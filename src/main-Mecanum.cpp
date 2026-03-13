@@ -47,14 +47,15 @@ double Kp = 0.76;
 double Ki = 1.5;
 double Kd = 0.00;
 double POn = 1.5;
+int started = 0;
 
-// Motor controllers
-MotorController motor1(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1, Kp, Ki, Kd, POn);
-MotorController motor2(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1, Kp, Ki, Kd, POn);
-MotorController motor3(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, 1, Kp, Ki, Kd, POn); // Reverse direction for rear motors
-MotorController motor4(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1, Kp, Ki, Kd, POn); // Reverse direction for rear motors
+// Motor controllers (initialized on first setAllMotorSpeeds call)
+MotorController* motor1 = nullptr;
+MotorController* motor2 = nullptr;
+MotorController* motor3 = nullptr;
+MotorController* motor4 = nullptr;
 
-MotorController* motors[4] = {&motor1, &motor2, &motor3, &motor4};
+MotorController* motors[4] = {nullptr, nullptr, nullptr, nullptr};
 
 MecanumController mecanum(0.15, 0.14, 0.075); // Example wheelbase and trackwidth in meters
 
@@ -80,15 +81,26 @@ void PidDelay(int ms) {
 CANInterface canInterface;
 
 void setAllMotorSpeeds(float linear_x, float linear_y, float angular_z) {
+    if(started == 0){
+        started = 1;
+        motor1 = new MotorController(DIR1, PWM1, SLP1, FLT1, EN_OUTA1, EN_OUTB1, CS1, 1, Kp, Ki, Kd, POn);
+        motor2 = new MotorController(DIR2, PWM2, SLP2, FLT2, EN_OUTA2, EN_OUTB2, CS2, -1, Kp, Ki, Kd, POn);
+        motor3 = new MotorController(DIR3, PWM3, SLP3, FLT3, EN_OUTA3, EN_OUTB3, CS3, 1, Kp, Ki, Kd, POn);
+        motor4 = new MotorController(DIR4, PWM4, SLP4, FLT4, EN_OUTA4, EN_OUTB4, CS4, -1, Kp, Ki, Kd, POn);
+        motors[0] = motor1;
+        motors[1] = motor2;
+        motors[2] = motor3;
+        motors[3] = motor4;
+        motor1->begin();
+        motor2->begin();
+        motor3->begin();
+        motor4->begin();
+    }
   float* wheelSpeeds = mecanum.calculateMecanumWheelSpeeds(-linear_x, linear_y, angular_z);
-  Serial.print("Wheel speeds: ");
   for (int i = 0; i < 4; i++) {
-    Serial.print(wheelSpeeds[i]);
     motors[i]->setSpeedRPM(wheelSpeeds[i] * 30.0/1.6);
 
-    Serial.print(" ");
   }
-  Serial.println();
 }
 
 void setup() {
@@ -101,22 +113,7 @@ void setup() {
   Serial.println(NODE_ROLE);
   Serial.println("===================================");
 
-  if (!motor1.begin()) {
-    Serial.println("ERROR: Motor1 initialization failed");
-    while (1);
-  }
-  if (!motor2.begin()) {
-    Serial.println("ERROR: Motor2 initialization failed");
-    while (1);
-  }
-  if (!motor3.begin()) {
-    Serial.println("ERROR: Motor3 initialization failed");
-    while (1);
-  }
-  if (!motor4.begin()) {
-    Serial.println("ERROR: Motor4 initialization failed");
-    while (1);
-  }
+  // Motors are initialized on first setAllMotorSpeeds call
 
   #if !DISABLE_CAN
   if (!canInterface.begin(NODE_ROLE)) {
@@ -129,7 +126,7 @@ void setup() {
 
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
-
+  /*
   SerialAtomics::send(Message::Ping);
   Message msg = Message::Invalid;
   while (msg != Message::Pong) {
@@ -137,7 +134,6 @@ void setup() {
   }
 
   msg = SerialAtomics::recvMsg();
-  /*
   while (msg != Message::StartGame) {
     msg = SerialAtomics::recvMsg();
   }*/
@@ -149,16 +145,16 @@ void loop() {
   digitalWrite(LED_PIN, LOW);
   delay(50);
 
-  if (digitalRead(motor1.getFaultPin()) == LOW) {
+  if (motor1 && digitalRead(motor1->getFaultPin()) == LOW) {
     Serial.println("WARNING: Motor1 fault detected");
   }
-  if (digitalRead(motor2.getFaultPin()) == LOW) {
+  if (motor2 && digitalRead(motor2->getFaultPin()) == LOW) {
     Serial.println("WARNING: Motor2 fault detected");
   }
-  if (digitalRead(motor3.getFaultPin()) == LOW) {
+  if (motor3 && digitalRead(motor3->getFaultPin()) == LOW) {
     Serial.println("WARNING: Motor3 fault detected");
   }
-  if (digitalRead(motor4.getFaultPin()) == LOW) {
+  if (motor4 && digitalRead(motor4->getFaultPin()) == LOW) {
     Serial.println("WARNING: Motor4 fault detected");
   }
   // === START LIGHT TO ORIGINAL POSITION
@@ -174,9 +170,14 @@ void loop() {
   // === PRESS THE BIG RED BUTTON ===
 
   // Forward
-  setAllMotorSpeeds(0.0, 0.05, 0);
+  setAllMotorSpeeds(0.0, 0.2, 0.0);
   //Start of PID and PID Delay
+  PidDelay(1000);
+  setAllMotorSpeeds(0, 0, 0);
+  PidDelay(2000);
+  setAllMotorSpeeds(0, 0, 0.25);
   PidDelay(1800);
+  setAllMotorSpeeds(0, 0, 0);
   /*
   for (int i = 0; i < 5; i++) {
     // Forward

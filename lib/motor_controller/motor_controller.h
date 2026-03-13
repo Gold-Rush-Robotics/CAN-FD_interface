@@ -26,7 +26,7 @@ private:
   PID* _pid;
   long _lastEncoderCount = 0;
   unsigned long _lastTime = 0;
-  unsigned long _lastRPM = 0;
+  float _lastRPM = 0.0f;
   const int _ticksPerRev = 1920; // Adjust as needed
   const float _gearRatio = 1.0; // Adjust as needed
   int starting_direction = 1; // 1 for forward, -1 for reverse

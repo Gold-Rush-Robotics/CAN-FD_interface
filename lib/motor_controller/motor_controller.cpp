@@ -7,7 +7,7 @@ MotorController::MotorController(int dirPin, int pwmPin, int slpPin, int fltPin,
 
   _pid = new PID(&Input, &Output, &Setpoint, Kp, Ki, Kd, POn, DIRECT);
   _pid->SetMode(AUTOMATIC);
-  _pid->SetOutputLimits(50,-50);
+  _pid->SetOutputLimits(-50,50);
   if (!_encoder) {
     Serial.println("ERROR: Failed to allocate Encoder");
   }
@@ -51,14 +51,14 @@ float MotorController::getRPM() {
     Serial.println("ERROR: Encoder not available");
     return 0.0f;
   }
-  unsigned long now = millis();
+  unsigned long now = micros();
   float timeElapsed = (now - _lastTime);
-  if (timeElapsed > 50) {
+  if (timeElapsed > 100) {
       long encCount = _encoder->read();
       long delta = (encCount - _lastEncoderCount) * -1;
 
       float revs = delta / (float)(_ticksPerRev * _gearRatio);
-      float dt = timeElapsed / 60000.0;
+      float dt = timeElapsed / 60000000.0;
       float rpm = revs / dt;
       _lastEncoderCount = encCount;
       _lastTime = now;
