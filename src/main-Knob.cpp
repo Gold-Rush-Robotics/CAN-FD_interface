@@ -9,11 +9,11 @@ void setup(){
 }
 
 void loop(){
-  Timer timer = Timer();
+  delay(40000);
 
-  timer.waitUntil(40000);
+  
   spinKnobServo(1000);
-  delay(10000);
+  delay(20000);
   spinKnobServo(1500);
 
   //stop

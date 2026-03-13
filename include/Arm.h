@@ -13,7 +13,7 @@ struct ArmPosition {
 
 // Predefined arm positions.
 const ArmPosition _ARM_POSITIONS[] = {
-    {43, 128},
+    {53, 128},
     {10, 180},
     {173, 128},
     {173, 50},

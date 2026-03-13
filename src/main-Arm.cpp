@@ -50,7 +50,12 @@ void setup() {
     while (true) {
         uint16_t lux = ColorSensor::readLux();
 
-        if (lux >= 0) {
+        // for(int i = 0; i < 100; i++) {
+        //     lux = ColorSensor::readLux();
+        //     Serial.println(lux);
+        //     delay(10);
+        // }
+        if (lux <= 50) {
             SerialAtomics::send(Message::StartGame);
             break;
         }
