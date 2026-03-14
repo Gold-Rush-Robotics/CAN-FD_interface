@@ -9,6 +9,9 @@
 #define START_LUX 50
 #endif
 
+#define SOLENOID_CONNECTOR 11
+#define KNOB_CONNECTOR 10
+
 #include <ColorSensor.h>
 #include <LED.h>
 #include <Arm.h>
@@ -20,8 +23,12 @@ void setup() {
     // USB serial for printing
     Serial.begin(115200);
 
-    // Serial comm. with mecanum teensy
+    // Comms w/ other teensies
     SerialAtomics::setup();
+    pinMode(KNOB_CONNECTOR, OUTPUT);
+    pinMode(SOLENOID_CONNECTOR, OUTPUT);
+    digitalWrite(KNOB_CONNECTOR, LOW);
+    digitalWrite(SOLENOID_CONNECTOR, LOW);
 
     // LEDs
     for (size_t i = 0; i < std::size(LEDS); i++) {
@@ -56,11 +63,6 @@ void setup() {
     while (true) {
         uint16_t lux = ColorSensor::readLux();
 
-        // for(int i = 0; i < 100; i++) {
-        //     lux = ColorSensor::readLux();
-        //     Serial.println(lux);
-        //     delay(10);
-        // }
         if (lux <= START_LUX) {
             SerialAtomics::send(Message::StartGame);
             break;
@@ -88,6 +90,18 @@ void loop() {
                 break;
             case Message::ReadThenSetLED:
                 ColorSensor::readThenSetLED((size_t) SerialAtomics::recvByte());
+                break;
+            case Message::StartKnob:
+                digitalWrite(KNOB_CONNECTOR, HIGH);
+                break;
+            case Message::StopKnob:
+                digitalWrite(KNOB_CONNECTOR, LOW);
+                break;
+            case Message::StartSolenoids:
+                digitalWrite(SOLENOID_CONNECTOR, HIGH);
+                break;
+            case Message::StopSolenoids:
+                digitalWrite(SOLENOID_CONNECTOR, LOW);
                 break;
             default:
                 Serial.println("Error: Received unexpected message in gameplay loop");

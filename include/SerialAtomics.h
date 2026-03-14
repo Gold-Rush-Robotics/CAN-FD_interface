@@ -10,9 +10,13 @@ enum Message: uint8_t {
     StartGame = 3,
     MoveArm = 4,
     MoveBugs = 5,
-    ReadThenSetLED = 6
+    ReadThenSetLED = 6,
+    StartKnob = 7,
+    StopKnob = 8,
+    StartSolenoids = 9,
+    StopSolenoids = 10,
 };
-const uint8_t MESSAGE_MAX = Message::ReadThenSetLED;
+const uint8_t MESSAGE_MAX = Message::StopSolenoids;
 
 namespace SerialAtomics {
     void setup() {

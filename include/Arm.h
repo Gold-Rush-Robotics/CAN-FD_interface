@@ -15,9 +15,9 @@ struct ArmPosition {
 const ArmPosition _ARM_POSITIONS[] = {
     {53, 128},
     {10, 180},
-    {150, 128},
+    {90, 90},
     {173, 50},
-    {135, 30},
+    {150, 30},
 };
 // Indices for the predefined arm positions. This lets the teensies communicate
 // an arm position over serial.

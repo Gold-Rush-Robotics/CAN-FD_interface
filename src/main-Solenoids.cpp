@@ -8,6 +8,8 @@ Version: October 7th, 2025
 
 // Defined Pins:
 
+#define ARM_CONNECTION 29
+
 int solenoid3 = 3;
 int solenoid7 = 2;
 int solenoid8 = 4;
@@ -26,6 +28,8 @@ void setup() {
   pinMode(solenoid8, OUTPUT);
   pinMode(solenoidPound, OUTPUT);
 
+  pinMode(ARM_CONNECTION, INPUT);
+
   // Solenoid sequence runs:
   // Code: 73738# (RESET#)
 
@@ -43,11 +47,7 @@ void funcInputter(int num)
 }
 
 void loop() {
-  // Prototype Optimization 2
-  delay(135000);
-
-  for (int i = 0; i < repeatCount; i++)
-  {
+  if(digitalRead(ARM_CONNECTION)) {
     for (int i = 0; i<6; i++)
     {
       funcInputter(soleArr[i]);
@@ -55,9 +55,4 @@ void loop() {
   
     delay(repeatDelay);
   }
-
-
-
-  //stop
-  delay(10000000);
 }

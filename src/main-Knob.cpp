@@ -3,20 +3,19 @@
 #include <timer.h>
 
 #define KNOB_PIN 2
+#define ARM_CONNECTION 6
 
 void setup(){
   initKnobServo(KNOB_PIN);
+  pinMode(ARM_CONNECTION, INPUT);
+  spinKnobServo(1500);
 }
 
 void loop(){
-  delay(35000);
-
-  
-  spinKnobServo(1000);
-  delay(30000);
-  spinKnobServo(1500);
-
-  //stop
-  delay(100000000);
+  if (digitalRead(ARM_CONNECTION)) {
+    spinKnobServo(1000);
+  } else {
+    spinKnobServo(1500);
+  }
 }
 
