@@ -2,7 +2,7 @@
 #define BLDC_MOTOR_CONTROLLER_H
 
 #include <Arduino.h>
-#include <Encoder.h>
+#include "pid_controller.h"
 
 /**
  * Brushless Motor Controller for Pololu A89301 Driver
@@ -64,22 +64,27 @@ public:
     bool begin();
     
     /**
-     * Set motor speed using PWM duty cycle
-     * @param pwmVal Speed value (-255 to 255), negative = reverse direction
+     * Set motor linear velocity in meters/second.
+     * Sign controls direction (+ forward, - reverse).
+     * Internally converted to RPM using wheel radius.
+     * @param velocityMps Target wheel linear velocity in m/s
      */
-    void setSpeed(int pwmVal);
+    void setSpeed(float velocityMps);
     
     /**
-     * Set motor speed in RPM (mapped to PWM)
+     * Set motor speed in RPM.
+     * - If PID is enabled: sets the closed-loop target RPM.
+     * - If PID is disabled: maps RPM to PWM effort open-loop.
      * @param rpm Target RPM (-maxRPM to +maxRPM)
      */
-    void setSpeedRPM(float rpm);
+    void setRPM(float rpm);
     
     /**
-     * Set motor speed as percentage
-     * @param percent Speed percentage (-100.0 to 100.0)
+     * Set PWM effort directly (duty cycle magnitude only).
+     * Direction is controlled separately by setDirection().
+     * @param effort PWM effort (0 to 255)
      */
-    void setSpeedPercent(float percent);
+    void setEffort(int effort);
     
     /**
      * Get current motor RPM from encoder
@@ -173,6 +178,49 @@ public:
      */
     void setMaxRPM(float maxRPM);
 
+    /* ---- Closed-loop (PID) velocity control ---- */
+
+    /**
+     * Run one iteration of the PID velocity loop.
+     * Call this from your main loop as fast as possible (or at a fixed rate).
+     * Uses encoder RPM as feedback by default; set useEncoderFeedback(false)
+     * to use the FG pin instead.
+     */
+    void update();
+
+    /**
+     * Enable or disable closed-loop PID control.
+    * When disabled, setSpeed and setRPM work open-loop.
+     * @param enabled true to enable PID
+     */
+    void setPIDEnabled(bool enabled);
+
+    /**
+     * Check if PID control is currently active
+     */
+    bool isPIDEnabled() const { return _pidEnabled; }
+
+    /**
+     * Configure PID gains
+     */
+    void setPIDGains(float kp, float ki, float kd);
+
+    /**
+     * Choose feedback source for PID loop
+     * @param useEncoder  true = encoder (default), false = FG pin
+     */
+    void useEncoderFeedback(bool useEncoder);
+
+    /**
+    * Get the current target RPM set by setRPM()
+     */
+    float getTargetRPM() const { return _targetRPM; }
+
+    /**
+     * Get a reference to the internal PID controller for advanced tuning
+     */
+    PIDController& pid() { return _pid; }
+
 private:
     // Pin assignments
     int _dirPin;
@@ -184,10 +232,11 @@ private:
     int _encC;
     int _fgPin;
     
-    // Encoder
-    Encoder* _encoder;
+    // Encoder (manual quadrature decode on A/B/C pins via ISR)
+    volatile long _encoderCount;
     long _lastEncoderCount;
     unsigned long _lastEncoderTime;
+    volatile uint8_t _lastEncState;  // previous AB state for quadrature lookup
     
     // FG (Frequency Generator) measurement
     volatile unsigned long _fgPulseCount;
@@ -199,6 +248,7 @@ private:
     float _gearRatio;
     int _fgPulsesPerRev;
     float _maxRPM;
+    float _wheelRadiusMeters;
     
     // State
     BrushlessMotorState _state;
@@ -209,16 +259,40 @@ private:
     // Fault detection
     unsigned long _lastFaultCheck;
     int _faultBlinkCount;
+
+    // PID velocity control
+    PIDController _pid;
+    float _targetRPM;
+    bool _pidEnabled;
+    bool _useEncoderFeedback;   // true = encoder, false = FG
+    unsigned long _pidSatStartMs;      // timestamp when saturation began
+    static constexpr unsigned long PID_SAT_WARN_MS = 2000;  // warn after 2 s saturated
     
-    // Static ISR handling for FG pin
+    // Static ISR handling for FG and encoder pins
     static BrushlessMotorController* _instances[4];
     static int _instanceCount;
     int _instanceIndex;
+
+    // FG pin ISRs
     static void fgISR0();
     static void fgISR1();
     static void fgISR2();
     static void fgISR3();
     void handleFGPulse();
+
+    // Encoder A/B pin ISRs (quadrature decode)
+    static void encISR0();
+    static void encISR1();
+    static void encISR2();
+    static void encISR3();
+    void handleEncoderPulse();
+
+    // Encoder C (index) ISRs
+    static void idxISR0();
+    static void idxISR1();
+    static void idxISR2();
+    static void idxISR3();
+    void handleIndexPulse();
 };
 
 #endif
